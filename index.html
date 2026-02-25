@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tweet to Give - Social-Native Philanthropy on Base</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@coinbase/wallet-sdk@4.0.0/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/viem@2.0.0/dist/index.umd.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: '#0052FF',
+                        baseDark: '#0000ff',
+                        gold: '#ffd12f',
+                        dark: '#0a0a0a',
+                        light: '#fafafa',
+                        gray: '#f0f0f0'
+                    },
+                    fontFamily: {
+                        display: ['Space Grotesk', 'sans-serif'],
+                        body: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fafafa;
+            color: #0a0a0a;
+            overflow-x: hidden;
+        }
+        .brutal-border {
+            border: 3px solid #0a0a0a;
+            box-shadow: 6px 6px 0px #0a0a0a;
+            transition: all 0.2s ease;
+        }
+        .brutal-border:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #0a0a0a;
+        }
+        .brutal-btn {
+            background: #0000ff;
+            color: white;
+            border: 3px solid #0a0a0a;
+            box-shadow: 4px 4px 0px #0a0a0a;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.15s ease;
+            cursor: pointer;
+        }
+        .brutal-btn:hover {
+            background: #ffd12f;
+            color: #0a0a0a;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #0a0a0a;
+        }
+        .brutal-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #0a0a0a;
+        }
+        .brutal-btn-secondary {
+            background: #ffd12f;
+            color: #0a0a0a;
+        }
+        .brutal-btn-secondary:hover {
+            background: #0000ff;
+            color: white;
+        }
+        .brutal-btn-outline {
+            background: white;
+            color: #0a0a0a;
+        }
+        .brutal-btn-outline:hover {
+            background: #0a0a0a;
+            color: white;
+        }
+        .brutal-card {
+            background: white;
+            border: 3px solid #0a0a0a;
+            box-shadow: 6px 6px 0px #0a0a0a;
+        }
+        .brutal-input {
+            border: 3px solid #0a0a0a;
+            background: white;
+            font-family: 'Space Grotesk', sans-serif;
+            outline: none;
+        }
+        .brutal-input:focus {
+            background: #f0f0f0;
+            box-shadow: 4px 4px 0px #0a0a0a;
+        }
+        .progress-bar {
+            background: #f0f0f0;
+            border: 2px solid #0a0a0a;
+            height: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: #ffd12f;
+            height: 100%;
+            transition: width 0.5s ease;
+            border-right: 2px solid #0a0a0a;
+        }
+        .category-badge-marginalized {
+            background: #0000ff;
+            color: white;
+            border: 2px solid #0a0a0a;
+        }
+        .category-badge-base {
+            background: #ffd12f;
+            color: #0a0a0a;
+            border: 2px solid #0a0a0a;
+        }
+        .mono-text {
+            font-family: 'Space Grotesk', monospace;
+            font-weight: 600;
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .tweet-box {
+            background: #0a0a0a;
+            color: #fff;
+            font-family: 'Space Grotesk', monospace;
+            border: 3px solid #0a0a0a;
+            box-shadow: 6px 6px 0px #0000ff;
+        }
+        .x-avatar {
+            width: 80px;
+            height: 80px;
+            border: 3px solid #0a0a0a;
+            box-shadow: 4px 4px 0px #0000ff;
+            object-fit: cover;
+        }
+        .team-card:hover .x-avatar {
+            box-shadow: 4px 4px 0px #ffd12f;
+            transform: rotate(-2deg);
+        }
+        .ticker-wrap {
+            width: 100%;
+            overflow: hidden;
+            background: #0000ff;
+            color: #ffd12f;
+            border-bottom: 3px solid #0a0a0a;
+            padding: 10px 0;
+        }
+        .ticker {
+            display: inline-block;
+            white-space: nowrap;
+            animation: ticker 25s linear infinite;
+        }
+        .ticker-item {
+            display: inline-block;
+            padding: 0 2rem;
+            font-family: 'Space Grotesk', monospace;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .tagline-box {
+            background: #ffd12f;
+            border: 3px solid #0a0a0a;
+            box-shadow: 6px 6px 0px #0a0a0a;
+            transform: rotate(-1deg);
+        }
+        .testnet-badge {
+            background: #ff0066;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .milestone-card {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 4px solid #0a0a0a;
+        }
+        .milestone-card::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: #ffd12f;
+            border: 3px solid #0a0a0a;
+            border-radius: 50%;
+        }
+        .milestone-card.completed::before {
+            background: #0000ff;
+        }
+        .milestone-card.active::before {
+            background: #ffd12f;
+            animation: pulse 2s infinite;
+        }
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 640px) {
+            .brutal-border, .brutal-card {
+                box-shadow: 4px 4px 0px #0a0a0a;
+            }
+        }
+    </style>
+</head>
+<body class="grid-bg min-h-screen">
+
+    <!-- Testnet Banner -->
+    <div class="testnet-badge text-center py-2 font-bold text-sm mono-text border-b-4 border-dark">
+        ⚠ BASE SEPOLIA TESTNET — VERIFY BEFORE MAINNET — NO REAL MONEY
+    </div>
+
+    <!-- Live Activity Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker" id="activityTicker">
+            <span class="ticker-item">🎯 @alice funded 0.5 ETH → Milestone 1 UNLOCKED</span>
+            <span class="ticker-item">⚡ @bob voted YES on @yayasanpintar milestone</span>
+            <span class="ticker-item">💎 @charlie tipped 0.1 ETH → Shoutout sent!</span>
+            <span class="ticker-item">🚀 @diana quorum reached → Funds RELEASED</span>
+            <span class="ticker-item">🔥 @eve milestone completed → Auto-tweeted!</span>
+            <span class="ticker-item">✨ @frank new donor → Welcome mention sent</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 w-full bg-white border-b-4 border-dark z-40">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home')">
+                <div class="w-10 h-10 bg-baseDark brutal-border flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-2xl tracking-tight">TWEET TO GIVE</h1>
+                    <p class="text-xs mono-text font-bold text-baseDark">SOCIAL-NATIVE • MILESTONE-VERIFIED</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-6">
+                <button onclick="showPage('explore')" class="font-display font-bold hover:text-baseDark transition-colors">EXPLORE</button>
+                <button onclick="showPage('howto-donate')" class="font-display font-bold hover:text-baseDark transition-colors">GIVE</button>
+                <button onclick="showPage('howto-create')" class="font-display font-bold hover:text-baseDark transition-colors">CREATE</button>
+                <button onclick="showPage('transparency')" class="font-display font-bold hover:text-baseDark transition-colors">TRANSPARENCY</button>
+                <button onclick="showPage('team')" class="font-display font-bold hover:text-baseDark transition-colors">TEAM</button>
+                <button id="connectBtn" onclick="connectWallet()" class="brutal-btn px-6 py-3 text-sm">
+                    CONNECT
+                </button>
+            </div>
+
+            <button class="md:hidden brutal-border p-2 bg-white" onclick="toggleMobileMenu()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden border-t-4 border-dark bg-white">
+            <div class="p-4 space-y-3">
+                <button onclick="showPage('explore')" class="block w-full text-left font-display font-bold py-2">EXPLORE</button>
+                <button onclick="showPage('howto-donate')" class="block w-full text-left font-display font-bold py-2">HOW TO GIVE</button>
+                <button onclick="showPage('howto-create')" class="block w-full text-left font-display font-bold py-2">HOW TO CREATE</button>
+                <button onclick="showPage('transparency')" class="block w-full text-left font-display font-bold py-2">TRANSPARENCY</button>
+                <button onclick="showPage('team')" class="block w-full text-left font-display font-bold py-2">TEAM</button>
+                <button onclick="connectWallet()" class="brutal-btn w-full py-3 mt-2">CONNECT WALLET</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-8 pb-12 px-4 max-w-6xl mx-auto">
+
+        <!-- HOME PAGE -->
+        <div id="page-home" class="fade-in">
+            <!-- Hero -->
+            <section class="mb-16">
+                <div class="brutal-card p-8 md:p-12 bg-gray relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gold brutal-border -mr-10 -mt-10 opacity-50"></div>
+                    <div class="absolute bottom-0 left-0 w-24 h-24 bg-baseDark brutal-border -ml-8 -mb-8 opacity-30"></div>
+                    
+                    <div class="relative z-10 max-w-2xl">
+                        <div class="tagline-box inline-block px-4 py-2 mb-6">
+                            <span class="mono-text text-sm font-black tracking-wider">NO MORE BLACK HOLES. ONLY PROOF. ⛓️</span>
+                        </div>
+
+                        <h2 class="font-display font-black text-4xl md:text-6xl mb-6 leading-none tracking-tight">
+                            DONATE WITH A<br>
+                            <span class="text-baseDark">TWEET.</span><br>
+                            <span class="text-gold bg-dark px-2 transform -rotate-2 inline-block">TRACK FOREVER.</span>
+                        </h2>
+                        
+                        <p class="text-lg mb-8 max-w-lg font-medium leading-relaxed">
+                            Social-native philanthropy. Milestone-verified releases. Every cent tracked onchain. No black holes. Only proof.
+                        </p>
+                        
+                        <div class="tweet-box p-4 mb-6 rounded max-w-lg">
+                            <div class="flex items-center gap-2 mb-2 opacity-60 text-sm">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                One tweet = Verified impact
+                            </div>
+                            <p class="text-lg md:text-xl font-mono text-gold">@bankr send 0.1 ETH to @school for #TweetToGive 123</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-4">
+                            <button onclick="showPage('howto-donate')" class="brutal-btn px-8 py-4 text-lg">
+                                TWEET TO GIVE →
+                            </button>
+                            <button onclick="showPage('explore')" class="brutal-btn brutal-btn-secondary px-8 py-4 text-lg">
+                                SEE CAMPAIGNS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trust Indicators -->
+            <section class="mb-16">
+                <div class="brutal-border p-6 bg-baseDark text-white">
+                    <div class="grid md:grid-cols-4 gap-6 text-center">
+                        <div>
+                            <div class="text-3xl mb-2">🔒</div>
+                            <div class="font-bold text-sm">NON-CUSTODIAL ESCROW</div>
+                            <div class="text-xs opacity-70">Funds locked in contract</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl mb-2">🗳️</div>
+                            <div class="font-bold text-sm">MILESTONE VOTING</div>
+                            <div class="text-xs opacity-70">Donors verify releases</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl mb-2">👤</div>
+                            <div class="font-bold text-sm">KYC'D CREATORS</div>
+                            <div class="text-xs opacity-70">Verified identities only</div>
+                        </div>
+                        <div>
+                            <div class="text-3xl mb-2">📢</div>
+                            <div class="font-bold text-sm">AUTO SHOUTOUTS</div>
+                            <div class="text-xs opacity-70">Privacy-respecting mentions</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Stats -->
+            <section class="mb-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="brutal-card p-6 text-center bg-white">
+                    <div class="text-3xl font-display font-black text-baseDark mono-text" id="statTotalRaised">0 ETH</div>
+                    <div class="text-sm font-bold opacity-60 mt-1">TOTAL LOCKED</div>
+                </div>
+                <div class="brutal-card p-6 text-center bg-white">
+                    <div class="text-3xl font-display font-black mono-text" id="statCampaigns">0</div>
+                    <div class="text-sm font-bold opacity-60 mt-1">CAMPAIGNS</div>
+                </div>
+                <div class="brutal-card p-6 text-center bg-white">
+                    <div class="text-3xl font-display font-black text-gold mono-text" id="statMilestones">0</div>
+                    <div class="text-sm font-bold opacity-60 mt-1">MILESTONES MET</div>
+                </div>
+                <div class="brutal-card p-6 text-center bg-white">
+                    <div class="text-3xl font-display font-black mono-text">0%</div>
+                    <div class="text-sm font-bold opacity-60 mt-1">PLATFORM FEE</div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="mb-16">
+                <h3 class="font-display font-black text-2xl mb-6 flex items-center gap-2">
+                    <span class="w-3 h-3 bg-baseDark brutal-border"></span>
+                    THE LOOP
+                </h3>
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="brutal-card p-6 bg-white text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-baseDark brutal-border flex items-center justify-center text-white text-2xl font-bold">1</div>
+                        <h4 class="font-bold mb-2">Tweet</h4>
+                        <p class="text-sm opacity-70">Post command with amount & campaign</p>
+                    </div>
+                    <div class="brutal-card p-6 bg-white text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gold brutal-border flex items-center justify-center text-dark text-2xl font-bold">2</div>
+                        <h4 class="font-bold mb-2">Lock</h4>
+                        <p class="text-sm opacity-70">Funds secured in escrow contract</p>
+                    </div>
+                    <div class="brutal-card p-6 bg-white text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-baseDark brutal-border flex items-center justify-center text-white text-2xl font-bold">3</div>
+                        <h4 class="font-bold mb-2">Verify</h4>
+                        <p class="text-sm opacity-70">Milestone voting by donors</p>
+                    </div>
+                    <div class="brutal-card p-6 bg-white text-center">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-gold brutal-border flex items-center justify-center text-dark text-2xl font-bold">4</div>
+                        <h4 class="font-bold mb-2">Release</h4>
+                        <p class="text-sm opacity-70">Auto-tweet on quorum reached</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Campaigns -->
+            <section>
+                <h3 class="font-display font-black text-2xl mb-6 flex items-center gap-2">
+                    <span class="w-3 h-3 bg-gold brutal-border"></span>
+                    ACTIVE CAMPAIGNS
+                </h3>
+                <div id="featuredCampaigns" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+        </div>
+
+        <!-- HOW TO DONATE PAGE -->
+        <div id="page-howto-donate" class="hidden fade-in">
+            <div class="brutal-card p-8 md:p-12 bg-white mb-8">
+                <h2 class="font-display font-black text-4xl mb-4">HOW TO GIVE</h2>
+                <p class="text-lg opacity-70 mb-8">One tweet. Full transparency. Zero friction.</p>
+
+                <!-- Method 1: Tweet -->
+                <div class="mb-12">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-baseDark brutal-border flex items-center justify-center text-white font-bold text-2xl">1</div>
+                        <div>
+                            <h3 class="font-display font-bold text-2xl">Tweet to Give</h3>
+                            <span class="bg-gold brutal-border px-3 py-1 text-xs font-bold mono-text">NO KYC • 30 SECONDS</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div class="brutal-border p-4 bg-gray">
+                                <div class="font-bold mb-2 text-base">Step 1: Link (One-time)</div>
+                                <p class="text-sm opacity-80">Connect X + wallet at <span class="mono-text font-bold">tweettogive.xyz/link</span></p>
+                            </div>
+                            <div class="brutal-border p-4 bg-gray">
+                                <div class="font-bold mb-2 text-base">Step 2: Tweet</div>
+                                <p class="text-sm opacity-80">Post with amount, creator handle, campaign ID</p>
+                            </div>
+                            <div class="brutal-border p-4 bg-gray">
+                                <div class="font-bold mb-2 text-base">Step 3: Confirm</div>
+                                <p class="text-sm opacity-80">Click link in reply, confirm wallet, done</p>
+                            </div>
+                            <div class="brutal-border p-4 bg-gold bg-opacity-30">
+                                <div class="font-bold mb-2 text-base">Step 4: Get Shoutout</div>
+                                <p class="text-sm opacity-80">Auto-mention when milestone hits (username only, no wallet exposed)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="tweet-box p-6 rounded">
+                            <div class="text-gold font-bold mb-4 text-sm uppercase tracking-wider">Command Format</div>
+                            <div class="space-y-3 font-mono text-sm md:text-base">
+                                <p><span class="text-gray-500">@bankr</span> <span class="text-gold">send</span> [AMOUNT] [TOKEN] <span class="text-gold">to</span> @[CREATOR] <span class="text-gold">for</span> #TweetToGive [ID]</p>
+                                <div class="border-t border-gray-700 pt-3 mt-3">
+                                    <p class="text-gray-400 mb-2">Examples:</p>
+                                    <p class="mb-1 text-green-400">@bankr send 0.1 ETH to @school for #TweetToGive 123</p>
+                                    <p class="mb-1 text-green-400">@bankr send 50 USDC to @devhub for #TweetToGive 456</p>
+                                    <p class="text-green-400">@bankr send 0.05 ETH to @orphanage for #TweetToGive 789</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method 2: Direct -->
+                <div class="mb-12">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-gold brutal-border flex items-center justify-center text-dark font-bold text-2xl">2</div>
+                        <div>
+                            <h3 class="font-display font-bold text-2xl">Direct Wallet</h3>
+                            <span class="bg-gold brutal-border px-3 py-1 text-xs font-bold mono-text">NO KYC • NO TWITTER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="brutal-border p-6 bg-gray">
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 bg-white brutal-border flex items-center justify-center text-2xl">🔗</div>
+                                <div class="font-bold mb-1">1. Connect</div>
+                                <p class="text-sm opacity-70">Any EVM wallet</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 bg-white brutal-border flex items-center justify-center text-2xl">🔍</div>
+                                <div class="font-bold mb-1">2. Browse</div>
+                                <p class="text-sm opacity-70">Check milestones</p>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 mx-auto mb-3 bg-white brutal-border flex items-center justify-center text-2xl">⚡</div>
+                                <div class="font-bold mb-1">3. Send</div>
+                                <p class="text-sm opacity-70">Vote on releases</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Note -->
+                <div class="brutal-border p-6 bg-baseDark text-white">
+                    <h4 class="font-display font-bold text-xl mb-3">🔒 PRIVACY BY DESIGN</h4>
+                    <ul class="space-y-2 text-sm md:text-base">
+                        <li>• Shoutouts use X username only — wallet address never exposed</li>
+                        <li>• Donor identity protected, impact public</li>
+                        <li>• Optional anonymous donation</li>
+                        <li>• Onchain transparency without doxxing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- HOW TO CREATE PAGE -->
+        <div id="page-howto-create" class="hidden fade-in">
+            <div class="brutal-card p-8 md:p-12 bg-white mb-8">
+                <h2 class="font-display font-black text-4xl mb-4">HOW TO CREATE</h2>
+                <p class="text-lg opacity-70 mb-8">Verified creators. Milestone accountability. Real impact.</p>
+
+                <!-- Step 1 -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-baseDark brutal-border flex items-center justify-center text-white font-bold text-2xl">1</div>
+                        <div>
+                            <h3 class="font-display font-bold text-2xl">Apply & KYC</h3>
+                            <span class="bg-gold brutal-border px-2 py-1 text-xs font-bold mono-text">REQUIRED</span>
+                        </div>
+                    </div>
+                    
+                    <div class="brutal-border p-6 bg-gray ml-0 md:ml-16">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold mb-3">Submit:</h4>
+                                <ul class="space-y-2 text-sm">
+                                    <li class="flex items-start gap-2"><span class="text-baseDark font-bold">→</span><span>Full legal name</span></li>
+                                    <li class="flex items-start gap-2"><span class="text-baseDark font-bold">→</span><span>Active X (6+ months)</span></li>
+                                    <li class="flex items-start gap-2"><span class="text-baseDark font-bold">→</span><span>Organization proof</span></li>
+                                    <li class="flex items-start gap-2"><span class="text-baseDark font-bold">→</span><span>2 references</span></li>
+                                </ul>
+                            </div>
+                            <div class="brutal-border p-4 bg-white">
+                                <h4 class="font-bold mb-3 text-baseDark">Sumsub KYC:</h4>
+                                <ol class="space-y-2 text-sm list-decimal list-inside">
+                                    <li>Government ID</li>
+                                    <li>Selfie + liveness</li>
+                                    <li>Proof of address</li>
+                                    <li>Video interview (15 min)</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-gold brutal-border flex items-center justify-center text-dark font-bold text-2xl">2</div>
+                        <div>
+                            <h3 class="font-display font-bold text-2xl">Design Milestones</h3>
+                            <span class="bg-gray brutal-border px-2 py-1 text-xs font-bold mono-text">24-48H REVIEW</span>
+                        </div>
+                    </div>
+                    
+                    <div class="brutal-border p-6 bg-gray ml-0 md:ml-16">
+                        <p class="mb-4">Break your campaign into verifiable milestones:</p>
+                        <div class="grid md:grid-cols-4 gap-4">
+                            <div class="brutal-border p-4 bg-white text-center">
+                                <div class="text-2xl font-bold text-baseDark mb-1">25%</div>
+                                <div class="font-bold text-sm">SETUP</div>
+                                <div class="text-xs opacity-70">Initial costs</div>
+                            </div>
+                            <div class="brutal-border p-4 bg-white text-center">
+                                <div class="text-2xl font-bold text-gold mb-1">50%</div>
+                                <div class="font-bold text-sm">EXECUTE</div>
+                                <div class="text-xs opacity-70">Core delivery</div>
+                            </div>
+                            <div class="brutal-border p-4 bg-white text-center">
+                                <div class="text-2xl font-bold text-baseDark mb-1">75%</div>
+                                <div class="font-bold text-sm">SCALE</div>
+                                <div class="text-xs opacity-70">Expansion</div>
+                            </div>
+                            <div class="brutal-border p-4 bg-white text-center">
+                                <div class="text-2xl font-bold text-gold mb-1">100%</div>
+                                <div class="font-bold text-sm">COMPLETE</div>
+                                <div class="text-xs opacity-70">Final delivery</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="mb-10">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-baseDark brutal-border flex items-center justify-center text-white font-bold text-2xl">3</div>
+                        <h3 class="font-display font-bold text-2xl">Launch & Engage</h3>
+                    </div>
+                    
+                    <div class="brutal-border p-6 bg-gray ml-0 md:ml-16">
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-3"><span class="w-8 h-8 bg-white brutal-border flex items-center justify-center font-bold text-sm">1</span><span>Post updates with #TweetToGive</span></li>
+                            <li class="flex items-center gap-3"><span class="w-8 h-8 bg-white brutal-border flex items-center justify-center font-bold text-sm">2</span><span>Submit milestone proof (photos/receipts)</span></li>
+                            <li class="flex items-center gap-3"><span class="w-8 h-8 bg-white brutal-border flex items-center justify-center font-bold text-sm">3</span><span>Donors vote — quorum releases funds</span></li>
+                            <li class="flex items-center gap-3"><span class="w-8 h-8 bg-white brutal-border flex items-center justify-center font-bold text-sm">4</span><span>Auto-tweet shoutouts to supporters</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="brutal-border p-8 bg-baseDark text-white text-center">
+                    <h3 class="font-display font-black text-2xl mb-3">READY TO BUILD TRUST?</h3>
+                    <p class="mb-6">Apply now. Be live in 48 hours.</p>
+                    <button onclick="showPage('create')" class="brutal-btn brutal-btn-secondary px-8 py-4 text-lg">
+                        START APPLICATION →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRANSPARENCY PAGE -->
+        <div id="page-transparency" class="hidden fade-in">
+            <div class="brutal-card p-8 md:p-12 bg-white mb-8">
+                <h2 class="font-display font-black text-4xl mb-4">TRANSPARENCY</h2>
+                <p class="text-lg opacity-70 mb-8">No black holes. Only proof. Everything onchain.</p>
+
+                <!-- Live Feed -->
+                <div class="mb-12">
+                    <h3 class="font-display font-bold text-xl mb-4 flex items-center gap-2">
+                        <span class="w-2 h-8 bg-gold brutal-border"></span>
+                        REAL-TIME ACTIVITY
+                    </h3>
+                    <div class="brutal-border p-4 bg-gray h-64 overflow-y-auto" id="transparencyFeed">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Smart Contract -->
+                <div class="mb-12">
+                    <h3 class="font-display font-bold text-xl mb-4 flex items-center gap-2">
+                        <span class="w-2 h-8 bg-baseDark brutal-border"></span>
+                        SMART CONTRACTS (BASE SEPOLIA)
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="brutal-border p-4 bg-white">
+                            <div class="font-bold mb-1">CampaignFactory.sol</div>
+                            <div class="text-sm mono-text text-baseDark">0x1234...5678</div>
+                            <a href="#" class="text-xs font-bold hover:underline">View on BaseScan →</a>
+                        </div>
+                        <div class="brutal-border p-4 bg-white">
+                            <div class="font-bold mb-1">EscrowManager.sol</div>
+                            <div class="text-sm mono-text text-baseDark">0xabcd...efgh</div>
+                            <a href="#" class="text-xs font-bold hover:underline">View on BaseScan →</a>
+                        </div>
+                        <div class="brutal-border p-4 bg-white">
+                            <div class="font-bold mb-1">MilestoneVoting.sol</div>
+                            <div class="text-sm mono-text text-baseDark">0x9876...5432</div>
+                            <a href="#" class="text-xs font-bold hover:underline">View on BaseScan →</a>
+                        </div>
+                        <div class="brutal-border p-4 bg-white">
+                            <div class="font-bold mb-1">SoulboundNFT.sol</div>
+                            <div class="text-sm mono-text text-baseDark">0xijkl...mnop</div>
+                            <a href="#" class="text-xs font-bold hover:underline">View on BaseScan →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Status -->
+                <div class="brutal-border p-6 bg-gold bg-opacity-20">
+                    <h4 class="font-bold mb-3">🔒 SECURITY STATUS</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li>• Smart contract audit: <span class="font-bold">Scheduled (pre-mainnet)</span></li>
+                        <li>• KYC provider: <span class="font-bold">Sumsub (SOC 2 compliant)</span></li>
+                        <li>• Escrow: <span class="font-bold">Non-custodial, deterministic release</span></li>
+                        <li>• Bug bounty: <span class="font-bold">Coming post-launch</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TEAM PAGE -->
+        <div id="page-team" class="hidden fade-in">
+            <div class="brutal-card p-8 md:p-12 bg-white mb-8">
+                <h2 class="font-display font-black text-4xl mb-4">WHO BUILDS THIS</h2>
+                <p class="text-lg opacity-70 mb-12">Verified. Onchain. Accountable.</p>
+
+                <!-- Founder -->
+                <div class="mb-12">
+                    <h3 class="font-display font-bold text-xl mb-6 flex items-center gap-2">
+                        <span class="w-2 h-8 bg-gold brutal-border"></span>
+                        FOUNDER
+                    </h3>
+                    <div class="team-card brutal-border p-8 bg-gray max-w-2xl">
+                        <div class="flex flex-col md:flex-row gap-6 items-start">
+                            <a href="https://x.com/arthousebase" target="_blank" class="block">
+                                <img src="https://unavatar.io/x/arthousebase" alt="@arthousebase" class="x-avatar bg-white" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%230000ff%22/%3E%3Ctext x=%2240%22 y=%2245%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3EA%3C/text%3E%3C/svg%3E'">
+                            </a>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h4 class="font-display font-bold text-2xl">@arthousebase</h4>
+                                    <span class="bg-gold brutal-border px-2 py-1 text-xs font-bold">FOUNDER</span>
+                                </div>
+                                <p class="text-base opacity-80 mb-4">Ex-tradfi. Now building public goods infrastructure on Base. Believes money should move at the speed of intention, with proof.</p>
+                                <div class="flex gap-3">
+                                    <a href="https://x.com/arthousebase" target="_blank" class="brutal-btn px-4 py-2 text-sm inline-flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                        Follow
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team -->
+                <div>
+                    <h3 class="font-display font-bold text-xl mb-6 flex items-center gap-2">
+                        <span class="w-2 h-8 bg-baseDark brutal-border"></span>
+                        CORE TEAM
+                    </h3>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="team-card brutal-border p-6 bg-white text-center">
+                            <a href="https://x.com/t2g_dev" target="_blank" class="block mb-4">
+                                <img src="https://unavatar.io/x/t2g_dev" alt="@t2g_dev" class="x-avatar mx-auto bg-gray" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%23ffd12f%22/%3E%3Ctext x=%2240%22 y=%2245%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22%230a0a0a%22 font-family=%22sans-serif%22%3ED%3C/text%3E%3C/svg%3E'">
+                            </a>
+                            <h4 class="font-display font-bold text-lg mb-1">@t2g_dev</h4>
+                            <p class="text-sm text-baseDark font-bold mb-2">Smart Contracts</p>
+                            <p class="text-sm opacity-70 mb-3">Solidity, security, gas optimization</p>
+                            <a href="https://x.com/t2g_dev" target="_blank" class="text-sm font-bold hover:text-baseDark">Follow →</a>
+                        </div>
+
+                        <div class="team-card brutal-border p-6 bg-white text-center">
+                            <a href="https://x.com/t2g_ops" target="_blank" class="block mb-4">
+                                <img src="https://unavatar.io/x/t2g_ops" alt="@t2g_ops" class="x-avatar mx-auto bg-gray" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%230000ff%22/%3E%3Ctext x=%2240%22 y=%2245%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22%3EO%3C/text%3E%3C/svg%3E'">
+                            </a>
+                            <h4 class="font-display font-bold text-lg mb-1">@t2g_ops</h4>
+                            <p class="text-sm text-baseDark font-bold mb-2">Operations</p>
+                            <p class="text-sm opacity-70 mb-3">KYC, creator success, compliance</p>
+                            <a href="https://x.com/t2g_ops" target="_blank" class="text-sm font-bold hover:text-baseDark">Follow →</a>
+                        </div>
+
+                        <div class="team-card brutal-border p-6 bg-white text-center">
+                            <a href="https://x.com/t2g_design" target="_blank" class="block mb-4">
+                                <img src="https://unavatar.io/x/t2g_design" alt="@t2g_design" class="x-avatar mx-auto bg-gray" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22%3E%3Crect width=%2280%22 height=%2280%22 fill=%22%23ffd12f%22/%3E%3Ctext x=%2240%22 y=%2245%22 font-size=%2230%22 text-anchor=%22middle%22 fill=%22%230a0a0a%22 font-family=%22sans-serif%22%3EDS%3C/text%3E%3C/svg%3E'">
+                            </a>
+                            <h4 class="font-display font-bold text-lg mb-1">@t2g_design</h4>
+                            <p class="text-sm text-baseDark font-bold mb-2">Experience</p>
+                            <p class="text-sm opacity-70 mb-3">UX, social virality, accessibility</p>
+                            <a href="https://x.com/t2g_design" target="_blank" class="text-sm font-bold hover:text-baseDark">Follow →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Join -->
+                <div class="mt-12 brutal-border p-8 bg-baseDark text-white text-center">
+                    <h3 class="font-display font-black text-2xl mb-3">JOIN THE MISSION</h3>
+                    <p class="mb-4">Hiring: Community Lead, Full-Stack Dev, BD</p>
+                    <a href="https://x.com/arthousebase" target="_blank" class="brutal-btn brutal-btn-secondary inline-block px-8 py-3">
+                        DM @arthousebase →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPLORE PAGE -->
+        <div id="page-explore" class="hidden fade-in">
+            <div class="brutal-card p-6 mb-8 bg-white">
+                <div class="flex flex-col md:flex-row gap-4 justify-between items-center">
+                    <div>
+                        <h2 class="font-display font-black text-3xl mb-2">ACTIVE CAMPAIGNS</h2>
+                        <p class="opacity-60">Base Sepolia Testnet — Verify before trusting</p>
+                    </div>
+                    <div class="flex gap-3 flex-wrap">
+                        <button onclick="filterCategory('all')" class="brutal-btn px-4 py-2 text-sm bg-white text-dark border-2 border-dark hover:bg-baseDark hover:text-white">ALL</button>
+                        <button onclick="filterCategory('marginalized')" class="brutal-btn px-4 py-2 text-sm bg-baseDark">MARGINALIZED</button>
+                        <button onclick="filterCategory('base')" class="brutal-btn brutal-btn-secondary px-4 py-2 text-sm">BASE ECOSYSTEM</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="campaignsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+
+        <!-- CREATE PAGE -->
+        <div id="page-create" class="hidden fade-in">
+            <div class="max-w-2xl mx-auto">
+                <div class="brutal-card p-8 bg-white mb-6">
+                    <h2 class="font-display font-black text-3xl mb-2">APPLY AS CREATOR</h2>
+                    <p class="opacity-60 mb-6">KYC required. Milestone accountability enforced.</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block font-bold mb-2 font-display">FULL NAME</label>
+                            <input type="text" id="applyName" class="brutal-input w-full p-4 text-lg" placeholder="Legal name">
+                        </div>
+
+                        <div>
+                            <label class="block font-bold mb-2 font-display">X HANDLE</label>
+                            <input type="text" id="applyX" class="brutal-input w-full p-4 text-lg" placeholder="@username">
+                        </div>
+
+                        <div>
+                            <label class="block font-bold mb-2 font-display">ORGANIZATION</label>
+                            <input type="text" id="applyOrg" class="brutal-input w-full p-4 text-lg" placeholder="Yayasan/Company">
+                        </div>
+
+                        <div class="brutal-border p-4 bg-gold bg-opacity-20">
+                            <h4 class="font-bold mb-3">KYC CHECKLIST (Sumsub)</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li>□ Government-issued ID</li>
+                                <li>□ Selfie with liveness detection</li>
+                                <li>□ Proof of address</li>
+                                <li>□ 15-minute video interview</li>
+                                <li>□ 2 professional references</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="startKYC()" class="brutal-btn w-full py-4 text-lg">
+                            BEGIN KYC →
+                        </button>
+                        
+                        <p class="text-center text-sm opacity-60">
+                            Questions? <a href="https://x.com/arthousebase" target="_blank" class="text-baseDark font-bold hover:underline">@arthousebase</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAIL PAGE -->
+        <div id="page-detail" class="hidden fade-in">
+            <button onclick="showPage('explore')" class="mb-4 font-bold hover:text-baseDark flex items-center gap-2">
+                ← BACK TO CAMPAIGNS
+            </button>
+            <div id="detailContent"></div>
+        </div>
+
+    </main>
+
+    <!-- Donate Modal -->
+    <div id="donateModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="brutal-card bg-white w-full max-w-md p-6 relative">
+            <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-2xl font-bold hover:text-baseDark">×</button>
+            
+            <h3 class="font-display font-black text-2xl mb-4">GIVE NOW</h3>
+            
+            <div class="flex gap-2 mb-4">
+                <button onclick="switchTab('x')" id="tab-x" class="flex-1 brutal-btn py-2 text-sm bg-baseDark">VIA X</button>
+                <button onclick="switchTab('wallet')" id="tab-wallet" class="flex-1 brutal-btn py-2 text-sm bg-white text-dark border-2 border-dark">WALLET</button>
+            </div>
+
+            <div id="donate-x">
+                <div class="tweet-box p-4 rounded mb-3">
+                    <p class="text-sm text-gray-400 mb-2">Tweet this command:</p>
+                    <p id="xCommand" class="font-mono text-gold text-sm break-all">@bankr send 0.1 ETH to @creator for #TweetToGive 123</p>
+                </div>
+                <button onclick="copyCommand()" class="brutal-btn w-full py-2 text-sm mb-2">COPY COMMAND</button>
+                <a id="tweetLink" href="#" target="_blank" class="brutal-btn brutal-btn-secondary w-full py-2 text-sm text-center block">OPEN X →</a>
+                <p class="text-xs text-center mt-3 opacity-60">You'll get a shoutout when milestone hits (username only)</p>
+            </div>
+
+            <div id="donate-wallet" class="hidden">
+                <div class="mb-4">
+                    <label class="block font-bold mb-2">AMOUNT (ETH)</label>
+                    <input type="number" id="donateAmount" class="brutal-input w-full p-4 text-2xl font-bold text-center" placeholder="0.1" step="0.01">
+                    <div class="flex gap-2 mt-2 justify-center">
+                        <button onclick="setAmount(0.01)" class="px-3 py-1 border-2 border-dark text-xs font-bold hover:bg-baseDark hover:text-white">0.01</button>
+                        <button onclick="setAmount(0.1)" class="px-3 py-1 border-2 border-dark text-xs font-bold hover:bg-baseDark hover:text-white">0.1</button>
+                        <button onclick="setAmount(0.5)" class="px-3 py-1 border-2 border-dark text-xs font-bold hover:bg-baseDark hover:text-white">0.5</button>
+                        <button onclick="setAmount(1)" class="px-3 py-1 border-2 border-dark text-xs font-bold hover:bg-baseDark hover:text-white">1.0</button>
+                    </div>
+                </div>
+                <button onclick="processDonation()" class="brutal-btn w-full py-4 text-lg">
+                    CONFIRM IN WALLET
+                </button>
+                <p class="text-xs text-center mt-3 opacity-60">You'll vote on milestone releases</p>
+            </div>
+            
+            <div class="brutal-border p-3 mt-4 bg-gold bg-opacity-20">
+                <p class="text-xs font-bold text-center">Base Sepolia Testnet • Soulbound NFT receipt • Privacy-protected shoutout</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 z-50 brutal-card p-4 bg-white max-w-sm">
+        <div class="flex items-center gap-3">
+            <div id="toastIcon" class="text-2xl">✓</div>
+            <div>
+                <div id="toastTitle" class="font-bold font-display">Success</div>
+                <div id="toastMessage" class="text-sm opacity-80">Done</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TESTNET CONFIG
+        const BASE_SEPOLIA = {
+            chainId: '0x14a34',
+            chainName: 'Base Sepolia',
+            nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+            rpcUrls: ['https://sepolia.base.org'],
+            blockExplorerUrls: ['https://sepolia.basescan.org']
+        };
+
+        let currentAccount = null;
+        let campaigns = [];
+        let currentCampaign = null;
+        let walletSdk = null;
+
+        const mockCampaigns = [
+            {
+                id: 1,
+                title: "Coding School Papua [TEST]",
+                category: "marginalized",
+                creator: "sekolahkode",
+                creatorAddress: "0x7a2F...9E4B",
+                creatorVerified: true,
+                description: "TESTNET: Laptops & coding for 50 students in rural Papua. 4 milestones. Vote to release funds.",
+                target: 10,
+                raised: 7.5,
+                donors: 45,
+                daysLeft: 12,
+                image: "📚",
+                milestones: [
+                    { percent: 25, title: "Buy Laptops", status: "completed", proof: "IPFS: QmXyZ...", votes: { yes: 40, no: 2 } },
+                    { percent: 50, title: "Hire Teachers", status: "active", proof: "Pending verification", votes: { yes: 15, no: 0 } },
+                    { percent: 75, title: "Internet Setup", status: "pending", proof: "-", votes: { yes: 0, no: 0 } },
+                    { percent: 100, title: "Graduation", status: "pending", proof: "-", votes: { yes: 0, no: 0 } }
+                ]
+            },
+            {
+                id: 2,
+                title: "Base Bootcamp Jakarta [TEST]",
+                category: "base",
+                creator: "basebuilders",
+                creatorAddress: "0x3B8C...2A1F",
+                creatorVerified: true,
+                description: "TESTNET: 3-month bootcamp for 30 Base developers. Milestone-verified releases.",
+                target: 15,
+                raised: 12.3,
+                donors: 89,
+                daysLeft: 5,
+                image: "⛓️",
+                milestones: [
+                    { percent: 30, title: "Curriculum Done", status: "completed", proof: "Verified", votes: { yes: 85, no: 1 } },
+                    { percent: 60, title: "First Cohort", status: "active", proof: "In progress", votes: { yes: 45, no: 3 } },
+                    { percent: 100, title: "Demo Day", status: "pending", proof: "-", votes: { yes: 0, no: 0 } }
+                ]
+            },
+            {
+                id: 3,
+                title: "Deaf Scholarships [TEST]",
+                category: "marginalized",
+                creator: "sahabattuli",
+                creatorAddress: "0x9D4E...7C2A",
+                creatorVerified: true,
+                description: "TESTNET: University scholarships for 20 deaf students. Interpreter support included.",
+                target: 8,
+                raised: 3.2,
+                donors: 28,
+                daysLeft: 25,
+                image: "🎓",
+                milestones: [
+                    { percent: 40, title: "Semester 1", status: "active", proof: "Processing", votes: { yes: 20, no: 1 } },
+                    { percent: 100, title: "Full Year", status: "pending", proof: "-", votes: { yes: 0, no: 0 } }
+                ]
+            },
+            {
+                id: 4,
+                title: "Bali Builder Hub [TEST]",
+                category: "base",
+                creator: "balihub",
+                creatorAddress: "0x1F3A...8B5C",
+                creatorVerified: true,
+                description: "TESTNET: Co-working space for Base builders. Milestone voting for each phase.",
+                target: 20,
+                raised: 18.5,
+                donors: 156,
+                daysLeft: 3,
+                image: "🏝️",
+                milestones: [
+                    { percent: 25, title: "Deposit Paid", status: "completed", proof: "Receipt", votes: { yes: 150, no: 2 } },
+                    { percent: 50, title: "Furniture", status: "completed", proof: "Delivered", votes: { yes: 140, no: 5 } },
+                    { percent: 75, title: "Event Setup", status: "active", proof: "In progress", votes: { yes: 89, no: 4 } },
+                    { percent: 100, title: "Grand Opening", status: "pending", proof: "-", votes: { yes: 0, no: 0 } }
+                ]
+            }
+        ];
+
+        const transparencyEvents = [
+            { time: '2m ago', text: '@alice voted YES on milestone 2 @sekolahkode', type: 'vote' },
+            { time: '5m ago', text: 'Quorum reached! 0.5 ETH released to @basebuilders', type: 'release' },
+            { time: '8m ago', text: '@bob donated 0.1 ETH → Shoutout tweeted!', type: 'donation' },
+            { time: '12m ago', text: 'Milestone 1 verified @sahabattuli', type: 'verify' },
+            { time: '15m ago', text: '@charlie joined as donor #156 @balihub', type: 'join' },
+            { time: '20m ago', text: 'Auto-tweet: Thank you @diana for supporting education! 🎉', type: 'shoutout' }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            campaigns = mockCampaigns;
+            initWalletSdk();
+            updateStats();
+            renderFeatured();
+            renderCampaigns(campaigns);
+            renderTransparencyFeed();
+        });
+
+        function initWalletSdk() {
+            if (typeof CoinbaseWalletSDK !== 'undefined') {
+                walletSdk = new CoinbaseWalletSDK({
+                    appName: 'Tweet to Give',
+                    appLogoUrl: 'https://tweettogive.xyz/logo.png',
+                    darkMode: false
+                });
+            }
+        }
+
+        async function connectWallet() {
+            try {
+                if (walletSdk) {
+                    const provider = walletSdk.makeWeb3Provider({ 
+                        options: 'all',
+                        chainId: 84532
+                    });
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    currentAccount = accounts[0];
+                } else {
+                    if (!window.ethereum) {
+                        showToast('Error', 'Install Coinbase Wallet or MetaMask', '⚠️');
+                        return;
+                    }
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    currentAccount = accounts[0];
+                }
+                
+                document.getElementById('connectBtn').textContent = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
+                showToast('Connected', `Base Sepolia: ${currentAccount.slice(0, 10)}...`, '✓');
+                
+                await switchToBaseSepolia();
+            } catch (err) {
+                showToast('Error', err.message, '❌');
+            }
+        }
+
+        async function switchToBaseSepolia() {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: BASE_SEPOLIA.chainId }]
+                });
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    await window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [BASE_SEPOLIA]
+                    });
+                }
+            }
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            document.getElementById('mobileMenu').classList.add('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        }
+
+        function updateStats() {
+            const total = campaigns.reduce((sum, c) => sum + c.raised, 0);
+            const milestonesMet = campaigns.reduce((sum, c) => sum + c.milestones.filter(m => m.status === 'completed').length, 0);
+            document.getElementById('statTotalRaised').textContent = total.toFixed(1) + ' ETH';
+            document.getElementById('statCampaigns').textContent = campaigns.length;
+            document.getElementById('statMilestones').textContent = milestonesMet;
+        }
+
+        function renderTransparencyFeed() {
+            const feed = document.getElementById('transparencyFeed');
+            if (!feed) return;
+            feed.innerHTML = transparencyEvents.map(e => `
+                <div class="flex gap-4 mb-3 pb-3 border-b-2 border-gray-200 last:border-0">
+                    <span class="text-xs font-bold text-baseDark mono-text w-16 flex-shrink-0">${e.time}</span>
+                    <span class="text-sm">${e.text}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderFeatured() {
+            document.getElementById('featuredCampaigns').innerHTML = campaigns.slice(0, 3).map(c => createCard(c)).join('');
+        }
+
+        function renderCampaigns(list) {
+            document.getElementById('campaignsList').innerHTML = list.map(c => createCard(c)).join('');
+        }
+
+        function createCard(c) {
+            const percent = Math.round((c.raised / c.target) * 100);
+            const isMarg = c.category === 'marginalized';
+            const activeMilestone = c.milestones.find(m => m.status === 'active');
+            return `
+                <div class="brutal-card bg-white flex flex-col h-full cursor-pointer" onclick="showDetail(${c.id})">
+                    <div class="p-6 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="${isMarg ? 'category-badge-marginalized' : 'category-badge-base'} px-3 py-1 text-xs font-bold mono-text">${isMarg ? 'MARGINALIZED' : 'BASE ECOSYSTEM'}</span>
+                            <span class="text-3xl">${c.image}</span>
+                        </div>
+                        <h4 class="font-display font-bold text-xl mb-2">${c.title}</h4>
+                        <p class="text-sm opacity-70 mb-4 line-clamp-2">${c.description}</p>
+                        
+                        ${activeMilestone ? `
+                        <div class="brutal-border p-3 bg-gold bg-opacity-20 mb-4">
+                            <div class="text-xs font-bold mb-1">ACTIVE MILESTONE: ${activeMilestone.percent}%</div>
+                            <div class="text-sm font-bold">${activeMilestone.title}</div>
+                            <div class="text-xs opacity-70 mt-1">Votes: ${activeMilestone.votes.yes} YES / ${activeMilestone.votes.no} NO</div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="flex items-center gap-2 mb-4 text-sm">
+                            <span class="font-mono opacity-60">by</span>
+                            <span class="font-bold mono-text text-baseDark">@${c.creator}</span>
+                            ${c.creatorVerified ? '<span class="text-gold">✓</span>' : ''}
+                        </div>
+
+                        <div class="progress-bar mb-2">
+                            <div class="progress-fill" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="flex justify-between text-sm font-bold mono-text">
+                            <span>${percent}%</span>
+                            <span>${c.raised}/${c.target} ETH</span>
+                        </div>
+                    </div>
+                    <div class="border-t-4 border-dark p-4 bg-gray flex justify-between items-center">
+                        <div class="text-xs font-bold">
+                            <div class="mono-text text-lg">${c.donors}</div>
+                            <div class="opacity-60">DONORS</div>
+                        </div>
+                        <div class="text-xs font-bold text-right">
+                            <div class="mono-text text-lg text-baseDark">${c.daysLeft}</div>
+                            <div class="opacity-60">DAYS</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterCategory(cat) {
+            showPage('explore');
+            renderCampaigns(cat === 'all' ? campaigns : campaigns.filter(c => c.category === cat));
+        }
+
+        function showDetail(id) {
+            currentCampaign = campaigns.find(c => c.id === id);
+            if (!currentCampaign) return;
+            
+            const percent = Math.round((currentCampaign.raised / currentCampaign.target) * 100);
+            const isMarg = currentCampaign.category === 'marginalized';
+            
+            const milestonesHtml = currentCampaign.milestones.map(m => {
+                let statusClass = '';
+                let statusText = 'PENDING';
+                let voteBar = '';
+                
+                if (m.status === 'completed') {
+                    statusClass = 'completed';
+                    statusText = '✓ COMPLETED';
+                } else if (m.status === 'active') {
+                    statusClass = 'active';
+                    statusText = '→ VOTING OPEN';
+                    const totalVotes = m.votes.yes + m.votes.no;
+                    const yesPercent = totalVotes > 0 ? (m.votes.yes / totalVotes) * 100 : 0;
+                    voteBar = `
+                        <div class="mt-2">
+                            <div class="flex justify-between text-xs font-bold mb-1">
+                                <span>${m.votes.yes} YES</span>
+                                <span>${m.votes.no} NO</span>
+                            </div>
+                            <div class="progress-bar h-2">
+                                <div class="progress-fill" style="width: ${yesPercent}%"></div>
+                            </div>
+                            <button onclick="voteMilestone(${m.percent}, true)" class="brutal-btn text-xs px-3 py-1 mt-2 mr-2">VOTE YES</button>
+                            <button onclick="voteMilestone(${m.percent}, false)" class="brutal-btn brutal-btn-outline text-xs px-3 py-1 mt-2">VOTE NO</button>
+                        </div>
+                    `;
+                }
+                
+                return `
+                    <div class="milestone-card ${statusClass} mb-6 pb-4">
+                        <div class="font-bold font-display text-lg flex items-center gap-2">
+                            ${m.percent}% — ${m.title}
+                            <span class="text-xs px-2 py-1 border-2 border-dark ${m.status === 'completed' ? 'bg-baseDark text-white' : m.status === 'active' ? 'bg-gold' : 'bg-gray'}">${statusText}</span>
+                        </div>
+                        <div class="text-sm opacity-70 mb-2">Proof: ${m.proof}</div>
+                        ${voteBar}
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('detailContent').innerHTML = `
+                <div class="brutal-card bg-white overflow-hidden">
+                    <div class="h-64 bg-gray border-b-4 border-dark flex items-center justify-center text-8xl relative">
+                        ${currentCampaign.image}
+                        <div class="absolute top-4 left-4">
+                            <span class="${isMarg ? 'category-badge-marginalized' : 'category-badge-base'} px-4 py-2 font-bold text-sm mono-text">${isMarg ? 'MARGINALIZED EDUCATION' : 'BASE ECOSYSTEM'}</span>
+                        </div>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <div class="flex flex-col md:flex-row gap-8">
+                            <div class="flex-1">
+                                <h1 class="font-display font-black text-3xl md:text-4xl mb-4">${currentCampaign.title}</h1>
+                                <div class="flex items-center gap-3 mb-6 p-4 bg-gray brutal-border">
+                                    <div class="w-12 h-12 bg-baseDark brutal-border flex items-center justify-center text-white font-bold text-xl">${currentCampaign.creator.charAt(0).toUpperCase()}</div>
+                                    <div>
+                                        <div class="font-bold mono-text text-baseDark">@${currentCampaign.creator}</div>
+                                        <div class="text-sm opacity-70">KYC Verified ✓</div>
+                                    </div>
+                                    <a href="https://x.com/${currentCampaign.creator}" target="_blank" class="ml-auto text-baseDark font-bold hover:underline">View X →</a>
+                                </div>
+                                <p class="text-lg leading-relaxed mb-6">${currentCampaign.description}</p>
+                                
+                                <div class="brutal-border p-6 bg-gray mb-6">
+                                    <h3 class="font-display font-bold text-xl mb-4 flex items-center gap-2">
+                                        <span class="w-2 h-2 bg-gold brutal-border"></span>
+                                        MILESTONE TRACKING
+                                    </h3>
+                                    <p class="text-sm mb-4 opacity-70">Funds locked until donors vote to release. Quorum required for each milestone.</p>
+                                    ${milestonesHtml}
+                                </div>
+                            </div>
+                            <div class="w-full md:w-80 flex-shrink-0">
+                                <div class="brutal-card p-6 bg-white sticky top-24">
+                                    <div class="text-center mb-6">
+                                        <div class="text-5xl font-display font-black text-baseDark mono-text mb-2">${percent}%</div>
+                                        <div class="progress-bar mb-4"><div class="progress-fill" style="width: ${percent}%"></div></div>
+                                        <div class="text-2xl font-bold mono-text">${currentCampaign.raised} ETH</div>
+                                        <div class="text-sm opacity-60">locked of ${currentCampaign.target} ETH target</div>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                                        <div class="brutal-border p-3 bg-gray">
+                                            <div class="font-bold text-xl mono-text">${currentCampaign.donors}</div>
+                                            <div class="text-xs opacity-60">DONORS</div>
+                                        </div>
+                                        <div class="brutal-border p-3 bg-gray">
+                                            <div class="font-bold text-xl mono-text text-baseDark">${currentCampaign.daysLeft}</div>
+                                            <div class="text-xs opacity-60">DAYS LEFT</div>
+                                        </div>
+                                    </div>
+                                    <button onclick="openDonateModal()" class="brutal-btn w-full py-4 text-lg mb-3">GIVE NOW</button>
+                                    <div class="text-center">
+                                        <p class="text-xs opacity-60 mb-2">or tweet to give:</p>
+                                        <code class="bg-gray px-2 py-1 text-xs brutal-border block mb-2 break-all">@bankr send 0.1 ETH to @${currentCampaign.creator} for #TweetToGive ${currentCampaign.id}</code>
+                                        <button onclick="copyTweetCmd()" class="text-xs font-bold text-baseDark hover:underline">Copy</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showPage('detail');
+        }
+
+        function voteMilestone(percent, vote) {
+            showToast('Voting', `Submitted ${vote ? 'YES' : 'NO'} vote for ${percent}% milestone`, '⏳');
+            setTimeout(() => {
+                showToast('Success', 'Vote recorded onchain!', '✓');
+            }, 1500);
+        }
+
+        function openDonateModal() {
+            if (!currentCampaign) return;
+            const cmd = `@bankr send 0.1 ETH to @${currentCampaign.creator} for #TweetToGive ${currentCampaign.id}`;
+            document.getElementById('xCommand').textContent = cmd;
+            document.getElementById('tweetLink').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(cmd)}`;
+            document.getElementById('donateModal').classList.remove('hidden');
+        }
+
+        function closeDonateModal() {
+            document.getElementById('donateModal').classList.add('hidden');
+            document.getElementById('donateAmount').value = '';
+        }
+
+        function switchTab(tab) {
+            if (tab === 'x') {
+                document.getElementById('tab-x').classList.add('bg-baseDark', 'text-white');
+                document.getElementById('tab-x').classList.remove('bg-white', 'text-dark');
+                document.getElementById('tab-wallet').classList.remove('bg-baseDark', 'text-white');
+                document.getElementById('tab-wallet').classList.add('bg-white', 'text-dark');
+                document.getElementById('donate-x').classList.remove('hidden');
+                document.getElementById('donate-wallet').classList.add('hidden');
+            } else {
+                document.getElementById('tab-wallet').classList.add('bg-baseDark', 'text-white');
+                document.getElementById('tab-wallet').classList.remove('bg-white', 'text-dark');
+                document.getElementById('tab-x').classList.remove('bg-baseDark', 'text-white');
+                document.getElementById('tab-x').classList.add('bg-white', 'text-dark');
+                document.getElementById('donate-wallet').classList.remove('hidden');
+                document.getElementById('donate-x').classList.add('hidden');
+            }
+        }
+
+        function copyCommand() {
+            navigator.clipboard.writeText(document.getElementById('xCommand').textContent);
+            showToast('Copied', 'Command copied to clipboard', '✓');
+        }
+
+        function copyTweetCmd() {
+            navigator.clipboard.writeText(`@bankr send 0.1 ETH to @${currentCampaign.creator} for #TweetToGive ${currentCampaign.id}`);
+            showToast('Copied', 'Tweet command copied', '✓');
+        }
+
+        function setAmount(amt) {
+            document.getElementById('donateAmount').value = amt;
+        }
+
+        async function processDonation() {
+            const amt = document.getElementById('donateAmount').value;
+            if (!amt || parseFloat(amt) <= 0) {
+                showToast('Error', 'Enter valid amount', '⚠️');
+                return;
+            }
+            if (!currentAccount) {
+                await connectWallet();
+                return;
+            }
+            
+            closeDonateModal();
+            showToast('Processing', 'Confirm in your wallet...', '⏳');
+            
+            setTimeout(() => {
+                currentCampaign.raised += parseFloat(amt);
+                currentCampaign.donors += 1;
+                updateStats();
+                showDetail(currentCampaign.id);
+                showToast('Success', `Locked ${amt} ETH in escrow! Vote on releases.`, '✓');
+            }, 2000);
+        }
+
+        function startKYC() {
+            const name = document.getElementById('applyName').value;
+            const x = document.getElementById('applyX').value;
+            if (!name || !x) {
+                showToast('Error', 'Fill all fields', '⚠️');
+                return;
+            }
+            showToast('Redirecting', 'Opening Sumsub KYC...', '→');
+        }
+
+        function showToast(title, msg, icon) {
+            const t = document.getElementById('toast');
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastMessage').textContent = msg;
+            document.getElementById('toastIcon').textContent = icon;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 4000);
+        }
+
+        document.getElementById('donateModal').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeDonateModal();
+        });
+    </script>
+</body>
+</html>
