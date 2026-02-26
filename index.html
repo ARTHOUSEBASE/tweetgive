@@ -18,9 +18,9 @@
                         baseDark: '#0039B3',
                         gold: '#FFD12F',
                         goldLight: '#FFF8E1',
-                        card: '#0a0b0d',        // Dark card background
-                        cardBorder: '#1a1b1f',  // Card border
-                        progress: '#0052FF',    // Progress bar
+                        card: '#0a0b0d',
+                        cardBorder: '#1a1b1f',
+                        progress: '#0052FF',
                         dark: '#0F172A',
                         gray: {
                             50: '#F8FAFC',
@@ -64,7 +64,6 @@
             min-height: -webkit-fill-available;
         }
         
-        /* Dark card style */
         .card {
             background: #0a0b0d;
             border: 1px solid #1a1b1f;
@@ -145,7 +144,6 @@
             box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.1);
         }
         
-        /* Category badge - fixed color #8edd65 */
         .badge-category {
             display: inline-flex;
             align-items: center;
@@ -159,7 +157,6 @@
             color: #0a0b0d;
         }
         
-        /* Progress bar - #0a0b0d background, #0052FF fill */
         .progress-bar {
             background: #0a0b0d;
             border-radius: 6px;
@@ -256,7 +253,6 @@
         .in-mini-app .mini-app-only { display: block; }
         .in-mini-app .browser-only { display: none; }
         
-        /* X Avatar for team */
         .x-avatar {
             width: 80px;
             height: 80px;
@@ -270,7 +266,6 @@
             transform: scale(1.05);
         }
         
-        /* Workflow diagram */
         .workflow-step {
             position: relative;
             padding-left: 40px;
@@ -376,7 +371,6 @@
                     <span class="text-base">Track forever.</span>
                 </h2>
                 
-                <!-- Personal tweet format -->
                 <div class="bg-gray-50 text-gray-800 p-4 rounded-lg font-mono text-sm mb-6 max-w-lg mx-auto text-left border border-gray-200">
                     <p class="text-gray-500 mb-2">Hey @friend, sending you</p>
                     <p><span class="text-base font-semibold">0.5 ETH</span> for the <span class="text-green-600 font-semibold">#CodingSchool</span> project 🎓</p>
@@ -416,14 +410,13 @@
             </section>
         </div>
 
-        <!-- HOW IT WORKS PAGE (NEW) -->
+        <!-- HOW IT WORKS PAGE -->
         <div id="page-how-it-works" class="hidden fade-in max-w-3xl mx-auto">
             <div class="mb-8">
                 <h2 class="font-bold text-3xl mb-4 text-gray-900">How Tweet to Give Works</h2>
                 <p class="text-gray-600">Simple flow from tweet to impact, fully onchain.</p>
             </div>
 
-            <!-- Workflow Diagram -->
             <div class="space-y-8 mb-12">
                 <div class="workflow-step">
                     <div class="workflow-number">1</div>
@@ -502,7 +495,6 @@
                 <p class="text-gray-600">Three ways to donate. All tracked onchain. 3% sustainability fee.</p>
             </div>
 
-            <!-- Method 1: Personal Tweet -->
             <div class="card p-6 mb-6">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">1</div>
@@ -527,7 +519,6 @@
                 </ol>
             </div>
 
-            <!-- Method 2: Direct -->
             <div class="card p-6 mb-6">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-10 h-10 bg-gold text-gray-900 rounded-lg flex items-center justify-center font-bold">2</div>
@@ -542,7 +533,6 @@
                 <button onclick="showPage('explore')" class="btn-primary w-full text-sm">Browse Campaigns</button>
             </div>
 
-            <!-- Method 3: Mini App -->
             <div class="card p-6">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-10 h-10 bg-gray-700 text-white rounded-lg flex items-center justify-center font-bold">3</div>
@@ -567,7 +557,6 @@
                 <p class="text-gray-600">Launch your verified campaign in 3 steps. Basename required.</p>
             </div>
 
-            <!-- Step 1 -->
             <div class="card p-6 mb-6">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">1</div>
@@ -599,7 +588,6 @@
                 </a>
             </div>
 
-            <!-- Step 2 -->
             <div class="card p-6 mb-6">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-10 h-10 bg-gold text-gray-900 rounded-lg flex items-center justify-center font-bold">2</div>
@@ -621,7 +609,6 @@
                 <p class="text-gray-500 text-xs mt-4">Review within 48 hours</p>
             </div>
 
-            <!-- Step 3 -->
             <div class="card p-6 mb-6">
                 <div class="flex items-center gap-4 mb-4">
                     <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">3</div>
@@ -727,7 +714,6 @@
                 <p class="text-gray-600">Verified. Onchain. Building in public.</p>
             </div>
 
-            <!-- Founder -->
             <div class="card p-8 mb-8">
                 <div class="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
                     <a href="https://x.com/arthousebase" target="_blank" class="block team-card">
@@ -751,7 +737,6 @@
                 </div>
             </div>
 
-            <!-- Core Team -->
             <div class="grid md:grid-cols-3 gap-6 mb-8">
                 <div class="card p-6 text-center">
                     <a href="https://x.com/t2g_dev" target="_blank" class="block mb-4 team-card">
@@ -784,7 +769,6 @@
                 </div>
             </div>
 
-            <!-- Join -->
             <div class="card p-8 text-center bg-gradient-to-r from-base to-blue-600 border-0">
                 <h3 class="font-bold text-xl mb-3 text-white">Join the Team</h3>
                 <p class="text-blue-100 mb-4 text-sm">We're hiring: Community Lead, Full-Stack Dev, BD Asia</p>
@@ -896,7 +880,7 @@
                 <p class="text-gray-400 text-xs mb-3">Send a personal tweet:</p>
                 <div class="bg-gray-900 p-4 rounded-lg mb-4 border border-gray-800">
                     <p class="text-gray-500 text-xs mb-2">Example:</p>
-                    <p class="text-white text-sm" id="xCommand">"Hey @creator, sending 0.1 ETH for your amazing work 💙"</p>
+                    <p class="text-white text-sm" id="xCommand">"Hey @creator, love what you're building. Sending 0.1 ETH to help out 💙"</p>
                 </div>
                 <button onclick="copyCommand()" class="btn-primary w-full mb-2 text-xs">Copy Example</button>
                 <a id="tweetLink" href="#" target="_blank" class="btn-secondary w-full text-center block text-xs">Open X</a>
@@ -931,7 +915,7 @@
     <script>
         // ==================== CONFIGURATION ====================
         const CONFIG = {
-            CHAIN_ID: '0x14a34', // Base Sepolia
+            CHAIN_ID: '0x14a34',
             RPC_URL: 'https://sepolia.base.org',
             CONTRACT_ADDRESS: '0x1234567890123456789012345678901234567890',
             EXPLORER_URL: 'https://sepolia.basescan.org'
@@ -1383,7 +1367,6 @@
             showToast('Processing', 'Confirm in wallet...', '⏳');
             
             try {
-                // Simulate transaction
                 await new Promise(r => setTimeout(r, 2000));
                 
                 currentCampaign.raised += parseFloat(amount);
@@ -1417,4 +1400,77 @@
 
         function showToast(title, msg, icon) {
             const toast = document.getElementById('toast');
-            const title
+            const titleEl = document.getElementById('toastTitle');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
+            
+            if (!toast || !titleEl || !msgEl || !iconEl) return;
+            
+            titleEl.textContent = title;
+            msgEl.textContent = msg;
+            iconEl.textContent = icon;
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function formatAddress(addr) {
+            return addr.slice(0, 6) + '...' + addr.slice(-4);
+        }
+
+        // ==================== PULL TO REFRESH ====================
+        function setupPullToRefresh() {
+            let startY = 0;
+            let isPulling = false;
+            
+            document.addEventListener('touchstart', (e) => {
+                if (window.scrollY === 0) {
+                    startY = e.touches[0].pageY;
+                    isPulling = true;
+                }
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isPulling) return;
+                
+                const y = e.touches[0].pageY;
+                const diff = y - startY;
+                
+                if (diff > 50 && window.scrollY === 0) {
+                    document.getElementById('pullRefresh')?.classList.add('visible');
+                }
+            }, { passive: true });
+            
+            document.addEventListener('touchend', () => {
+                if (!isPulling) return;
+                
+                const pullRefresh = document.getElementById('pullRefresh');
+                if (pullRefresh?.classList.contains('visible')) {
+                    pullRefresh.classList.remove('visible');
+                    loadCampaigns();
+                    showToast('Refreshing...', 'Updating campaigns', '↻');
+                }
+                
+                isPulling = false;
+            });
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('donateModal')?.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeDonateModal();
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
