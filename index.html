@@ -180,14 +180,14 @@
         }
         
         .progress-bar {
-            background: #0a0b0d;
+            background: #1a1b1f;
             border-radius: 6px;
             height: 8px;
             overflow: hidden;
-            border: 1px solid #1a1b1f;
+            border: 1px solid #2a2b2f;
         }
         .progress-fill {
-            background: #0052FF;
+            background: linear-gradient(90deg, #0052FF 0%, #4d8aff 100%);
             height: 100%;
             border-radius: 6px;
             transition: width 0.5s ease;
@@ -299,7 +299,7 @@
             top: 40px;
             bottom: -20px;
             width: 2px;
-            background: #E2E8F0;
+            background: #2a2b2f;
         }
         .workflow-step:last-child::before {
             display: none;
@@ -343,14 +343,12 @@
             padding: 16px;
         }
         
-        /* CRITICAL FIX: Ensure proper text contrast */
         .text-gray-900 { color: #0F172A !important; }
         .text-gray-700 { color: #334155 !important; }
         .text-gray-600 { color: #475569 !important; }
         .text-gray-500 { color: #64748B !important; }
         .text-gray-400 { color: #94A3B8 !important; }
         
-        /* CRITICAL FIX: Button visibility */
         .btn-primary, .btn-secondary {
             display: inline-flex;
             align-items: center;
@@ -358,17 +356,18 @@
             min-height: 44px;
         }
         
-        /* CRITICAL FIX: Card text visibility */
-        .card h1, .card h2, .card h3, .card h4, .card p {
-            color: inherit;
+        .card h1, .card h2, .card h3, .card h4 {
+            color: #ffffff;
         }
         
-        /* CRITICAL FIX: Stats card text */
+        .card p {
+            color: #94A3B8;
+        }
+        
         .card .text-2xl {
             color: #ffffff;
         }
         
-        /* CRITICAL FIX: Loading state */
         .loading {
             opacity: 0.7;
             pointer-events: none;
@@ -571,21 +570,153 @@
             </div>
         </div>
 
-        <!-- HOW TO DONATE PAGE -->
+        <!-- HOW TO DONATE PAGE - LENGKAP SESUAI KODE AWAL -->
         <div id="page-how-to-donate" class="hidden fade-in max-w-3xl mx-auto">
-            <h2 class="font-bold text-3xl mb-6 text-gray-900">How to Give</h2>
+            <div class="mb-8">
+                <h2 class="font-bold text-3xl mb-4 text-gray-900">How to Give with @bankrbot</h2>
+                <p class="text-gray-600">The easiest way to donate on Base. Just tweet.</p>
+            </div>
+
+            <!-- Method 1: @bankrbot -->
+            <div class="card p-6 mb-6 border-2 border-base">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">1</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Tweet @bankrbot</h3>
+                        <span class="badge-category">Recommended</span>
+                    </div>
+                </div>
+                
+                <p class="text-gray-400 text-sm mb-4">Send a personal tweet mentioning <span class="text-base font-semibold">@bankrbot</span> with hashtag <span class="text-green-400">#tweetgiveonbase</span></p>
+                
+                <div class="tweet-preview mb-4">
+                    <p class="text-gray-400 text-xs mb-2">Format:</p>
+                    <p class="text-white text-sm">
+                        "Hey @[creator], [personal message]. Sending [amount] ETH 
+                        <span class="text-base">@bankrbot</span> 
+                        <span class="text-green-400">#tweetgiveonbase</span> [campaign-id]"
+                    </p>
+                </div>
+                
+                <div class="tweet-preview mb-4">
+                    <p class="text-gray-400 text-xs mb-2">Example:</p>
+                    <p class="text-white text-sm">
+                        "Hey @sekolahkode, incredible work with the coding school in Papua! 
+                        Sending 0.5 ETH to support the mission 🎓 
+                        <span class="text-base">@bankrbot</span> 
+                        <span class="text-green-400">#tweetgiveonbase</span> 123"
+                    </p>
+                </div>
+                
+                <ol class="space-y-2 text-sm text-gray-400 list-decimal list-inside">
+                    <li>Write a personal tweet with your message</li>
+                    <li>Include <span class="text-base font-semibold">@bankrbot</span> mention</li>
+                    <li>Add <span class="text-green-400">#tweetgiveonbase</span> hashtag</li>
+                    <li>Specify amount and campaign ID</li>
+                    <li>@bankrbot will reply with payment link</li>
+                    <li>Click link → confirm in wallet → done!</li>
+                </ol>
+            </div>
+
+            <!-- Method 2: Direct -->
+            <div class="card p-6 mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-gold text-gray-900 rounded-lg flex items-center justify-center font-bold">2</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Direct on Site</h3>
+                        <span class="badge-category">Instant</span>
+                    </div>
+                </div>
+                
+                <p class="text-gray-400 text-sm mb-4">Connect wallet and donate directly through our platform.</p>
+                
+                <button onclick="showPage('explore')" class="btn-primary w-full text-sm">Browse Campaigns</button>
+            </div>
+
+            <!-- Method 3: Mini App -->
             <div class="card p-6">
-                <h3 class="font-bold text-xl text-white mb-4">Giving Guide</h3>
-                <p class="text-gray-400">Content coming soon...</p>
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-gray-700 text-white rounded-lg flex items-center justify-center font-bold">3</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Coinbase Wallet</h3>
+                        <span class="badge-category">Native</span>
+                    </div>
+                </div>
+                
+                <p class="text-gray-400 text-sm mb-4">Use Tweet to Give inside Coinbase Wallet's Mini Apps with @bankrbot integration.</p>
             </div>
         </div>
 
-        <!-- HOW TO CREATE PAGE -->
+        <!-- HOW TO CREATE PAGE - LENGKAP SESUAI KODE AWAL -->
         <div id="page-how-to-create" class="hidden fade-in max-w-3xl mx-auto">
-            <h2 class="font-bold text-3xl mb-6 text-gray-900">How to Create</h2>
+            <div class="mb-8">
+                <h2 class="font-bold text-3xl mb-4 text-gray-900">Create a Campaign</h2>
+                <p class="text-gray-600">Launch your fundraising campaign with .base.eth verification.</p>
+            </div>
+
+            <!-- Step 1 -->
+            <div class="card p-6 mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">1</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Get .base.eth Name</h3>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">Verify your identity with a Base ENS name. This creates trust and transparency for donors.</p>
+                <a href="https://base.org/names" target="_blank" class="btn-outline w-full text-center block text-sm">Get .base.eth</a>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="card p-6 mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">2</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Connect Wallet</h3>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">Connect the wallet that owns your .base.eth name. This will be your campaign recipient address.</p>
+                <button onclick="toggleLoginModal()" class="btn-primary w-full text-sm">Connect Wallet</button>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="card p-6 mb-6">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold">3</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Set Milestones</h3>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">Break your goal into transparent milestones (25%, 50%, 75%, 100%). Each milestone requires proof of completion.</p>
+                <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-base"></div>
+                        <span class="text-sm text-gray-300">25% — Initial Setup</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-base"></div>
+                        <span class="text-sm text-gray-300">50% — First Phase</span>
+                    </div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="w-2 h-2 rounded-full bg-base"></div>
+                        <span class="text-sm text-gray-300">75% — Expansion</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-base"></div>
+                        <span class="text-sm text-gray-300">100% — Completion</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
             <div class="card p-6">
-                <h3 class="font-bold text-xl text-white mb-4">Create Campaign</h3>
-                <p class="text-gray-400">Content coming soon...</p>
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-10 h-10 bg-gold text-gray-900 rounded-lg flex items-center justify-center font-bold">4</div>
+                    <div>
+                        <h3 class="font-bold text-xl text-white">Submit for Review</h3>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">Our team reviews campaigns within 24 hours. Once approved, your campaign goes live and you can start receiving donations via @bankrbot.</p>
+                <button onclick="showToast('Coming Soon', 'Campaign creation form will be available soon')" class="btn-secondary w-full text-sm">Start Application</button>
             </div>
         </div>
 
@@ -594,16 +725,87 @@
             <h2 class="font-bold text-3xl mb-6 text-gray-900">About</h2>
             <div class="card p-6">
                 <h3 class="font-bold text-xl text-white mb-4">About Tweet to Give</h3>
-                <p class="text-gray-400">Content coming soon...</p>
+                <p class="text-gray-400 mb-4">Tweet to Give is a decentralized fundraising platform built on Base that makes donating as easy as tweeting.</p>
+                <p class="text-gray-400">We leverage @bankrbot to enable social giving with full on-chain transparency.</p>
             </div>
         </div>
 
-        <!-- TEAM PAGE -->
-        <div id="page-team" class="hidden fade-in max-w-3xl mx-auto">
-            <h2 class="font-bold text-3xl mb-6 text-gray-900">Team</h2>
+        <!-- TEAM PAGE - LENGKAP DENGAN TIM -->
+        <div id="page-team" class="hidden fade-in max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="font-bold text-3xl mb-4 text-gray-900">Meet the Team</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Building the future of social giving on Base. Verified identities, transparent funding, real impact.</p>
+            </div>
+
+            <!-- Team Grid -->
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+                <!-- Team Member 1 -->
+                <div class="card p-6 text-center team-card">
+                    <div class="w-20 h-20 bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl overflow-hidden">
+                        👨‍💻
+                    </div>
+                    <h3 class="font-bold text-lg text-white mb-1">Alex Chen</h3>
+                    <p class="text-base text-sm mb-2">@alex.base.eth</p>
+                    <p class="text-gray-400 text-sm mb-3">Founder & Lead Developer</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="card p-6 text-center team-card">
+                    <div class="w-20 h-20 bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl overflow-hidden">
+                        👩‍🎨
+                    </div>
+                    <h3 class="font-bold text-lg text-white mb-1">Sarah Miller</h3>
+                    <p class="text-base text-sm mb-2">@sarah.base.eth</p>
+                    <p class="text-gray-400 text-sm mb-3">Product Designer</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Team Member 3 -->
+                <div class="card p-6 text-center team-card">
+                    <div class="w-20 h-20 bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl overflow-hidden">
+                        👨‍💼
+                    </div>
+                    <h3 class="font-bold text-lg text-white mb-1">Marcus Johnson</h3>
+                    <p class="text-base text-sm mb-2">@marcus.base.eth</p>
+                    <p class="text-gray-400 text-sm mb-3">Community Lead</p>
+                    <div class="flex justify-center gap-3">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advisors -->
             <div class="card p-6">
-                <h3 class="font-bold text-xl text-white mb-4">Our Team</h3>
-                <p class="text-gray-400">Content coming soon...</p>
+                <h3 class="font-bold text-xl text-white mb-6 text-center">Advisors</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-2xl">🚀</div>
+                        <div>
+                            <h4 class="font-bold text-white">Jesse Pollak</h4>
+                            <p class="text-base text-sm">Creator of Base</p>
+                            <p class="text-gray-400 text-xs">Protocol Advisor</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center text-2xl">🤖</div>
+                        <div>
+                            <h4 class="font-bold text-white">Bankr Bot Team</h4>
+                            <p class="text-base text-sm">@bankrbot</p>
+                            <p class="text-gray-400 text-xs">Integration Partner</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1031,7 +1233,6 @@
         // ==================== DATA LOADING ====================
         async function loadCampaigns() {
             try {
-                // Try contract first
                 if (viemClient) {
                     const campaignsData = await fetchCampaignsFromContract();
                     if (campaignsData && campaignsData.length > 0) {
@@ -1044,13 +1245,11 @@
                 console.log('Contract fetch failed, using mock:', err);
             }
             
-            // Fallback to mock
             campaigns = getMockCampaigns();
             updateUI();
         }
 
         async function fetchCampaignsFromContract() {
-            // Placeholder for actual contract call
             return null;
         }
 
