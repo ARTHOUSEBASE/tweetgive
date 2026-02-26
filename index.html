@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://unpkg.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://sepolia.base.org https://api.tweet2give.xyz https://api.bankr.xyz; img-src 'self' data: https:; frame-src https://accounts.google.com;">
     <title>Tweet to Give — Verified Giving on Base</title>
-    
-    <!-- External Resources with SRI (Subresource Integrity) -->
-    <script src="https://cdn.tailwindcss.com" integrity="sha384-..." crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/@coinbase/minikit@0.0.1/dist/index.umd.js" integrity="sha384-..." crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/viem@2.0.0/dist/index.umd.js" integrity="sha384-..." crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@coinbase/minikit@0.0.1/dist/index.umd.js"></script>
+    <script src="https://unpkg.com/viem@2.0.0/dist/index.umd.js"></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             theme: {
@@ -28,20 +24,33 @@
                         progress: '#0052FF',
                         dark: '#0F172A',
                         gray: {
-                            50: '#F8FAFC', 100: '#F1F5F9', 200: '#E2E8F0',
-                            300: '#CBD5E1', 400: '#94A3B8', 500: '#64748B',
-                            600: '#475569', 700: '#334155', 800: '#1E293B', 900: '#0F172A'
+                            50: '#F8FAFC',
+                            100: '#F1F5F9',
+                            200: '#E2E8F0',
+                            300: '#CBD5E1',
+                            400: '#94A3B8',
+                            500: '#64748B',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1E293B',
+                            900: '#0F172A'
                         }
                     },
-                    fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
                 }
             }
         }
     </script>
-    
     <style>
         * { box-sizing: border-box; }
-        html { min-height: 100vh; min-height: -webkit-fill-available; }
+        
+        html {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+        }
+        
         body {
             font-family: 'Inter', system-ui, sans-serif;
             background: #ffffff;
@@ -50,6 +59,8 @@
             -webkit-font-smoothing: antialiased;
             padding-top: env(safe-area-inset-top);
             padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
             min-height: 100vh;
             min-height: -webkit-fill-available;
         }
@@ -78,27 +89,14 @@
             cursor: pointer;
             font-size: 14px;
             touch-action: manipulation;
-            position: relative;
-            overflow: hidden;
         }
-        .btn-primary:hover:not(:disabled) { background: #0039B3; transform: translateY(-1px); }
-        .btn-primary:active:not(:disabled) { transform: scale(0.98); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-primary.loading::after {
-            content: '';
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            border: 2px solid transparent;
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
+        .btn-primary:hover {
+            background: #0039B3;
+            transform: translateY(-1px);
         }
-        
-        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
         
         .btn-secondary {
             background: #FFD12F;
@@ -111,8 +109,46 @@
             cursor: pointer;
             font-size: 14px;
         }
-        .btn-secondary:hover:not(:disabled) { background: #E6BC2B; }
-        .btn-secondary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-secondary:hover {
+            background: #E6BC2B;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: #0052FF;
+            border: 1.5px solid #0052FF;
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 12px 24px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-outline:hover {
+            background: #0052FF;
+            color: white;
+        }
+        
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #E2E8F0;
+            background: white;
+            color: #0F172A;
+        }
+        .btn-social:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
         
         .input {
             background: #1a1b1f;
@@ -123,14 +159,12 @@
             color: #ffffff;
             width: 100%;
             -webkit-appearance: none;
-            transition: border-color 0.2s;
         }
         .input:focus {
             outline: none;
             border-color: #0052FF;
             box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.1);
         }
-        .input:invalid { border-color: #ef4444; }
         
         .badge-category {
             display: inline-flex;
@@ -157,6 +191,17 @@
             height: 100%;
             border-radius: 6px;
             transition: width 0.5s ease;
+        }
+        
+        .nav-link {
+            color: #64748B;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .nav-link:hover {
+            color: #0052FF;
         }
         
         .nav-container {
@@ -188,11 +233,91 @@
             gap: 6px;
         }
         
+        .milestone-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #1a1b1f;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 0 2px #2a2b2f;
+        }
+        .milestone-dot.completed {
+            background: #0052FF;
+            box-shadow: 0 0 0 2px #0052FF;
+        }
+        .milestone-dot.active {
+            background: #FFD12F;
+            box-shadow: 0 0 0 2px #FFD12F;
+        }
+        
         .hidden { display: none !important; }
         .fade-in { animation: fadeIn 0.3s ease; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pull-refresh {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #64748B;
+            font-size: 14px;
+            transition: top 0.2s;
+        }
+        .pull-refresh.visible {
+            top: 20px;
+        }
+        
+        .mini-app-only { display: none; }
+        .in-mini-app .mini-app-only { display: block; }
+        .in-mini-app .browser-only { display: none; }
+        
+        .x-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #0052FF;
+            object-fit: cover;
+            transition: all 0.2s ease;
+        }
+        .team-card:hover .x-avatar {
+            border-color: #FFD12F;
+            transform: scale(1.05);
+        }
+        
+        .workflow-step {
+            position: relative;
+            padding-left: 40px;
+        }
+        .workflow-step::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: #E2E8F0;
+        }
+        .workflow-step:last-child::before {
+            display: none;
+        }
+        .workflow-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 32px;
+            height: 32px;
+            background: #0052FF;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
         }
         
         .tweet-preview {
@@ -201,7 +326,10 @@
             border-radius: 12px;
             padding: 16px;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            word-break: break-word;
+        }
+        
+        .g_id_signin {
+            width: 100% !important;
         }
         
         .login-modal {
@@ -213,65 +341,58 @@
             align-items: center;
             justify-content: center;
             padding: 16px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-        .login-modal.active { opacity: 1; visibility: visible; }
-        
-        .modal-content {
-            transform: scale(0.95);
-            transition: transform 0.3s;
-        }
-        .login-modal.active .modal-content { transform: scale(1); }
-        
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
         }
         
-        .error-message {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 4px;
-            display: none;
-        }
-        .error-message.visible { display: block; }
+        /* CRITICAL FIX: Ensure proper text contrast */
+        .text-gray-900 { color: #0F172A !important; }
+        .text-gray-700 { color: #334155 !important; }
+        .text-gray-600 { color: #475569 !important; }
+        .text-gray-500 { color: #64748B !important; }
+        .text-gray-400 { color: #94A3B8 !important; }
         
-        .loading-skeleton {
-            background: linear-gradient(90deg, #1a1b1f 25%, #2a2b2f 50%, #1a1b1f 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-            border-radius: 4px;
+        /* CRITICAL FIX: Button visibility */
+        .btn-primary, .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
         }
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+        
+        /* CRITICAL FIX: Card text visibility */
+        .card h1, .card h2, .card h3, .card h4, .card p {
+            color: inherit;
+        }
+        
+        /* CRITICAL FIX: Stats card text */
+        .card .text-2xl {
+            color: #ffffff;
+        }
+        
+        /* CRITICAL FIX: Loading state */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
         }
     </style>
 </head>
 <body class="bg-white">
 
+    <!-- Pull to refresh indicator -->
+    <div id="pullRefresh" class="pull-refresh">
+        <span>↓ Pull to refresh</span>
+    </div>
+
     <!-- Testnet Banner -->
-    <div class="testnet-banner" role="banner">
-        Base Sepolia Testnet — 2026 Beta — <span id="walletDisplay">Not Connected</span>
+    <div class="testnet-banner">
+        Base Sepolia Testnet — 2026 Beta — Wallet: <span id="walletDisplay">Not Connected</span>
     </div>
 
     <!-- Navigation -->
-    <nav class="nav-container sticky top-0 z-50" role="navigation" aria-label="Main navigation">
+    <nav class="nav-container sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="app.navigate('home')" role="button" tabindex="0" aria-label="Go to home">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('home')">
                 <div class="w-10 h-10 bg-base rounded-lg flex items-center justify-center shadow-lg">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                    </svg>
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </div>
                 <div>
                     <h1 class="font-bold text-xl tracking-tight text-gray-900">Tweet to Give</h1>
@@ -280,69 +401,54 @@
             </div>
             
             <div class="hidden md:flex items-center gap-6">
-                <button onclick="app.navigate('explore')" class="nav-link text-gray-600 hover:text-base font-medium transition-colors">Explore</button>
-                <button onclick="app.navigate('how-it-works')" class="nav-link text-gray-600 hover:text-base font-medium transition-colors">How It Works</button>
-                <button onclick="app.navigate('about')" class="nav-link text-gray-600 hover:text-base font-medium transition-colors">About</button>
-                <button id="connectBtn" onclick="app.toggleLoginModal()" class="btn-primary text-sm">
-                    Connect Wallet
+                <button onclick="showPage('explore')" class="nav-link">Explore</button>
+                <button onclick="showPage('how-it-works')" class="nav-link">How It Works</button>
+                <button onclick="showPage('how-to-donate')" class="nav-link">How to Give</button>
+                <button onclick="showPage('how-to-create')" class="nav-link">How to Create</button>
+                <button onclick="showPage('about')" class="nav-link">About</button>
+                <button onclick="showPage('team')" class="nav-link">Team</button>
+                <button id="connectBtn" onclick="toggleLoginModal()" class="btn-primary text-sm">
+                    Connect
                 </button>
             </div>
 
-            <button class="md:hidden p-2 text-gray-700" onclick="app.toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false" id="mobileMenuBtn">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
+            <button class="md:hidden p-2 text-gray-700" onclick="toggleMobileMenu()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
             </button>
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-white p-4" role="menu">
+        <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-white p-4">
             <div class="space-y-3">
-                <button onclick="app.navigate('explore')" class="block w-full text-left py-2 text-gray-600 hover:text-base font-medium">Explore</button>
-                <button onclick="app.navigate('how-it-works')" class="block w-full text-left py-2 text-gray-600 hover:text-base font-medium">How It Works</button>
-                <button onclick="app.navigate('about')" class="block w-full text-left py-2 text-gray-600 hover:text-base font-medium">About</button>
-                <button onclick="app.toggleLoginModal()" class="btn-primary w-full mt-2">Connect Wallet</button>
+                <button onclick="showPage('explore')" class="block w-full text-left py-2 nav-link">Explore</button>
+                <button onclick="showPage('how-it-works')" class="block w-full text-left py-2 nav-link">How It Works</button>
+                <button onclick="showPage('how-to-donate')" class="block w-full text-left py-2 nav-link">How to Give</button>
+                <button onclick="showPage('how-to-create')" class="block w-full text-left py-2 nav-link">How to Create</button>
+                <button onclick="showPage('about')" class="block w-full text-left py-2 nav-link">About</button>
+                <button onclick="showPage('team')" class="block w-full text-left py-2 nav-link">Team</button>
+                <button onclick="toggleLoginModal()" class="btn-primary w-full mt-2">Connect</button>
             </div>
         </div>
     </nav>
 
     <!-- Login Modal -->
-    <div id="loginModal" class="login-modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
-        <div class="card w-full max-w-md p-6 relative modal-content">
-            <button onclick="app.toggleLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2" aria-label="Close login modal">
-                <span aria-hidden="true">×</span>
-            </button>
+    <div id="loginModal" class="login-modal hidden">
+        <div class="card w-full max-w-md p-6 relative">
+            <button onclick="toggleLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">×</button>
             
-            <h3 id="loginTitle" class="font-bold text-xl mb-2 text-white text-center">Connect to Tweet to Give</h3>
-            <p class="text-gray-400 text-sm text-center mb-6">Choose your connection method</p>
-            
-            <!-- Wallet Connect (Primary) -->
-            <button onclick="app.connectWallet()" class="btn-primary w-full mb-4 flex items-center justify-center gap-2" id="walletConnectBtn">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                </svg>
-                Connect Wallet
-            </button>
-            
-            <div class="relative my-4">
-                <div class="absolute inset-0 flex items-center">
-                    <div class="w-full border-t border-gray-700"></div>
-                </div>
-                <div class="relative flex justify-center text-xs">
-                    <span class="px-2 bg-gray-900 text-gray-400">Or continue with</span>
-                </div>
-            </div>
+            <h3 class="font-bold text-xl mb-2 text-white text-center">Connect to Tweet to Give</h3>
+            <p class="text-gray-400 text-sm text-center mb-6">Choose your login method</p>
             
             <!-- Google Sign In -->
-            <div class="mb-3">
+            <div class="mb-4">
                 <div id="g_id_onload"
-                     data-client_id=""
+                     data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
                      data-context="signin"
                      data-ux_mode="popup"
                      data-callback="handleGoogleLogin"
                      data-auto_prompt="false">
                 </div>
-                <div class="g_id_signin w-full"
+                <div class="g_id_signin"
                      data-type="standard"
                      data-shape="rectangular"
                      data-theme="outline"
@@ -353,14 +459,35 @@
                 </div>
             </div>
             
+            <div class="relative my-4">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-700"></div>
+                </div>
+                <div class="relative flex justify-center text-xs">
+                    <span class="px-2 bg-gray-900 text-gray-400">Or</span>
+                </div>
+            </div>
+            
+            <!-- X Login -->
+            <button onclick="loginWithX()" class="btn-social mb-3">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                Continue with X
+            </button>
+            
+            <!-- Wallet Connect -->
+            <button onclick="connectWallet(); toggleLoginModal();" class="btn-social">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Connect Wallet
+            </button>
+            
             <p class="text-xs text-gray-500 text-center mt-4">
-                By connecting, you agree to our <a href="#" class="text-base hover:underline" onclick="event.preventDefault(); app.showToast('Coming soon', 'Terms page under development')">Terms</a> and <a href="#" class="text-base hover:underline" onclick="event.preventDefault(); app.showToast('Coming soon', 'Privacy policy under development')">Privacy Policy</a>
+                By connecting, you agree to our <a href="#" class="text-base hover:underline">Terms</a> and <a href="#" class="text-base hover:underline">Privacy Policy</a>
             </p>
         </div>
     </div>
 
     <!-- Main Content -->
-    <main class="py-8 px-4 max-w-6xl mx-auto pb-24" id="mainContent">
+    <main class="py-8 px-4 max-w-6xl mx-auto pb-24">
 
         <!-- HOME PAGE -->
         <div id="page-home" class="fade-in">
@@ -373,9 +500,10 @@
                     <span class="text-base">Track forever.</span>
                 </h2>
                 
+                <!-- Personal tweet format with @bankrbot -->
                 <div class="tweet-preview text-left mb-6 max-w-lg mx-auto">
                     <div class="flex items-center gap-2 mb-2">
-                        <div class="w-8 h-8 bg-gray-700 rounded-full" role="img" aria-label="User avatar"></div>
+                        <div class="w-8 h-8 bg-gray-700 rounded-full"></div>
                         <div>
                             <p class="text-white text-sm font-semibold">You</p>
                             <p class="text-gray-500 text-xs">@yourhandle</p>
@@ -388,20 +516,21 @@
                         <span class="text-green-400">#tweetgiveonbase</span>
                     </p>
                     <div class="flex gap-4 text-gray-500 text-xs">
-                        <span aria-label="3 comments">💬 3</span>
-                        <span aria-label="12 retweets">🔄 12</span>
-                        <span aria-label="45 likes">❤️ 45</span>
+                        <span>💬 3</span>
+                        <span>🔄 12</span>
+                        <span>❤️ 45</span>
+                        <span>📊 1.2K</span>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap gap-4 justify-center">
-                    <button onclick="app.navigate('explore')" class="btn-primary">Explore Campaigns</button>
-                    <button onclick="app.toggleLoginModal()" class="btn-secondary">Connect to Give</button>
+                    <button onclick="showPage('explore')" class="btn-primary">Explore Campaigns</button>
+                    <button onclick="toggleLoginModal()" class="btn-secondary">Connect to Give</button>
                 </div>
             </section>
 
             <!-- Stats -->
-            <section class="mb-12 grid grid-cols-2 md:grid-cols-4 gap-4" aria-label="Platform statistics">
+            <section class="mb-12 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="card p-4 text-center">
                     <div class="text-2xl font-bold text-white" id="statTotalRaised">0 ETH</div>
                     <div class="text-xs text-gray-400 mt-1">Total Raised</div>
@@ -421,160 +550,114 @@
             </section>
 
             <!-- Featured -->
-            <section aria-labelledby="featured-heading">
-                <h3 id="featured-heading" class="font-bold text-xl mb-4 text-gray-900">Active Campaigns</h3>
-                <div id="featuredCampaigns" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <!-- Loading skeleton -->
-                    <div class="card p-4 h-48 loading-skeleton"></div>
-                    <div class="card p-4 h-48 loading-skeleton"></div>
-                    <div class="card p-4 h-48 loading-skeleton"></div>
-                </div>
+            <section>
+                <h3 class="font-bold text-xl mb-4 text-gray-900">Active Campaigns</h3>
+                <div id="featuredCampaigns" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
             </section>
         </div>
 
         <!-- EXPLORE PAGE -->
         <div id="page-explore" class="hidden fade-in">
             <h2 class="font-bold text-3xl mb-6 text-gray-900">Explore Campaigns</h2>
-            
-            <!-- Filters -->
-            <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
-                <button onclick="app.filterCategory('all')" class="px-4 py-2 bg-base text-white rounded-full text-sm font-medium hover:bg-baseDark transition-colors">All</button>
-                <button onclick="app.filterCategory('education')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">Education</button>
-                <button onclick="app.filterCategory('community')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">Community</button>
-                <button onclick="app.filterCategory('emergency')" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-300 transition-colors">Emergency</button>
-            </div>
-            
-            <div id="campaignsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div class="card p-4 h-48 loading-skeleton"></div>
-                <div class="card p-4 h-48 loading-skeleton"></div>
-                <div class="card p-4 h-48 loading-skeleton"></div>
-            </div>
-        </div>
-
-        <!-- CAMPAIGN DETAIL PAGE -->
-        <div id="page-detail" class="hidden fade-in max-w-3xl mx-auto">
-            <button onclick="app.navigate('explore')" class="mb-4 text-gray-600 hover:text-base flex items-center gap-2">
-                ← Back to campaigns
-            </button>
-            <div id="detailContent">
-                <div class="card p-4 h-96 loading-skeleton"></div>
-            </div>
+            <div id="campaignsList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
 
         <!-- HOW IT WORKS PAGE -->
         <div id="page-how-it-works" class="hidden fade-in max-w-3xl mx-auto">
             <h2 class="font-bold text-3xl mb-6 text-gray-900">How It Works</h2>
-            
-            <div class="space-y-6">
-                <div class="card p-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold flex-shrink-0">1</div>
-                        <div>
-                            <h3 class="font-bold text-lg text-white mb-2">Find a Cause</h3>
-                            <p class="text-gray-400 text-sm">Browse verified campaigns from creators with .base.eth names. Every campaign is vetted and tracked on-chain.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card p-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold flex-shrink-0">2</div>
-                        <div>
-                            <h3 class="font-bold text-lg text-white mb-2">Tweet to Donate</h3>
-                            <p class="text-gray-400 text-sm">Mention @bankrbot with #tweetgiveonbase and the campaign ID. Include the amount you want to donate.</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card p-6">
-                    <div class="flex items-start gap-4">
-                        <div class="w-10 h-10 bg-base text-white rounded-lg flex items-center justify-center font-bold flex-shrink-0">3</div>
-                        <div>
-                            <h3 class="font-bold text-lg text-white mb-2">Confirm & Track</h3>
-                            <p class="text-gray-400 text-sm">Click the payment link from @bankrbot, confirm in your wallet, and track your donation on Base explorer.</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="card p-6">
+                <h3 class="font-bold text-xl text-white mb-4">Simple Steps to Give</h3>
+                <p class="text-gray-400">Content coming soon...</p>
+            </div>
+        </div>
+
+        <!-- HOW TO DONATE PAGE -->
+        <div id="page-how-to-donate" class="hidden fade-in max-w-3xl mx-auto">
+            <h2 class="font-bold text-3xl mb-6 text-gray-900">How to Give</h2>
+            <div class="card p-6">
+                <h3 class="font-bold text-xl text-white mb-4">Giving Guide</h3>
+                <p class="text-gray-400">Content coming soon...</p>
+            </div>
+        </div>
+
+        <!-- HOW TO CREATE PAGE -->
+        <div id="page-how-to-create" class="hidden fade-in max-w-3xl mx-auto">
+            <h2 class="font-bold text-3xl mb-6 text-gray-900">How to Create</h2>
+            <div class="card p-6">
+                <h3 class="font-bold text-xl text-white mb-4">Create Campaign</h3>
+                <p class="text-gray-400">Content coming soon...</p>
             </div>
         </div>
 
         <!-- ABOUT PAGE -->
         <div id="page-about" class="hidden fade-in max-w-3xl mx-auto">
-            <h2 class="font-bold text-3xl mb-6 text-gray-900">About Tweet to Give</h2>
-            <div class="card p-6 mb-6">
-                <p class="text-gray-400 mb-4">Tweet to Give is a decentralized fundraising platform built on Base that makes donating as easy as tweeting. We leverage @bankrbot to enable social giving with full on-chain transparency.</p>
-                <p class="text-gray-400 mb-4">Every donation is tracked on the blockchain, ensuring 100% transparency in how funds are used.</p>
-                <h3 class="font-bold text-white mb-2">Key Features:</h3>
-                <ul class="list-disc list-inside text-gray-400 text-sm space-y-1">
-                    <li>Social media-native donations</li>
-                    <li>Verified creator identities via .base.eth</li>
-                    <li>Milestone-based fund release</li>
-                    <li>Only 3% platform fee</li>
-                </ul>
+            <h2 class="font-bold text-3xl mb-6 text-gray-900">About</h2>
+            <div class="card p-6">
+                <h3 class="font-bold text-xl text-white mb-4">About Tweet to Give</h3>
+                <p class="text-gray-400">Content coming soon...</p>
             </div>
+        </div>
+
+        <!-- TEAM PAGE -->
+        <div id="page-team" class="hidden fade-in max-w-3xl mx-auto">
+            <h2 class="font-bold text-3xl mb-6 text-gray-900">Team</h2>
+            <div class="card p-6">
+                <h3 class="font-bold text-xl text-white mb-4">Our Team</h3>
+                <p class="text-gray-400">Content coming soon...</p>
+            </div>
+        </div>
+
+        <!-- DETAIL PAGE -->
+        <div id="page-detail" class="hidden fade-in max-w-3xl mx-auto">
+            <button onclick="showPage('explore')" class="mb-4 text-gray-600 hover:text-base flex items-center gap-2">
+                ← Back to campaigns
+            </button>
+            <div id="detailContent"></div>
         </div>
 
     </main>
 
     <!-- Donate Modal -->
-    <div id="donateModal" class="login-modal" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
-        <div class="card w-full max-w-md relative p-6 modal-content">
-            <button onclick="app.closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2" aria-label="Close donation modal">
-                <span aria-hidden="true">×</span>
-            </button>
+    <div id="donateModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="card w-full max-w-md relative p-6">
+            <button onclick="closeDonateModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">×</button>
             
-            <h3 id="donateTitle" class="font-bold text-lg mb-4 text-white">Donate with @bankrbot</h3>
+            <h3 class="font-bold text-lg mb-4 text-white">Donate with @bankrbot</h3>
             
+            <!-- Tweet Preview -->
             <div class="tweet-preview mb-4">
                 <p class="text-gray-400 text-xs mb-2">Your tweet:</p>
-                <p class="text-white text-sm" id="bankrTweetPreview"></p>
+                <p class="text-white text-sm" id="bankrTweetPreview">
+                    Hey @creator, love what you're building. 
+                    Sending 0.1 ETH to help out 💙 
+                    @bankrbot #tweetgiveonbase 123
+                </p>
             </div>
             
-            <form id="donateForm" onsubmit="event.preventDefault(); app.processDirectDonation();">
-                <div class="space-y-3 mb-4">
-                    <div>
-                        <label for="donateAmount" class="text-xs text-gray-400 mb-1 block">Amount (ETH) *</label>
-                        <input 
-                            type="number" 
-                            id="donateAmount" 
-                            class="input" 
-                            placeholder="0.1" 
-                            step="0.001" 
-                            min="0.001" 
-                            max="100"
-                            required
-                            aria-required="true"
-                            oninput="app.validateAmount(this)"
-                        >
-                        <span class="error-message" id="amountError">Please enter a valid amount between 0.001 and 100 ETH</span>
-                    </div>
-                    <div>
-                        <label for="donateMessage" class="text-xs text-gray-400 mb-1 block">Personal Message</label>
-                        <input 
-                            type="text" 
-                            id="donateMessage" 
-                            class="input" 
-                            placeholder="love what you're building..." 
-                            maxlength="100"
-                            oninput="app.updateBankrPreview()"
-                        >
-                    </div>
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="text-xs text-gray-400 mb-1 block">Amount (ETH)</label>
+                    <input type="number" id="donateAmount" class="input" placeholder="0.1" step="0.01" value="0.1" onchange="updateBankrPreview()">
                 </div>
-                
-                <div class="flex gap-2 mb-4">
-                    <button type="button" onclick="app.setAmount(0.01)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800 hover:border-base transition-colors">0.01</button>
-                    <button type="button" onclick="app.setAmount(0.1)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800 hover:border-base transition-colors">0.1</button>
-                    <button type="button" onclick="app.setAmount(0.5)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800 hover:border-base transition-colors">0.5</button>
-                    <button type="button" onclick="app.setAmount(1)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800 hover:border-base transition-colors">1.0</button>
+                <div>
+                    <label class="text-xs text-gray-400 mb-1 block">Personal Message</label>
+                    <input type="text" id="donateMessage" class="input" placeholder="love what you're building..." value="love what you're building" onchange="updateBankrPreview()">
                 </div>
-                
-                <button type="button" onclick="app.copyBankrTweet()" class="btn-primary w-full mb-2 text-sm" id="copyTweetBtn">Copy Tweet & Open X</button>
-                
-                <div class="flex gap-2">
-                    <button type="submit" class="btn-secondary flex-1 text-sm" id="directDonateBtn">Donate Direct</button>
-                    <button type="button" onclick="app.closeDonateModal()" class="btn-outline flex-1 text-sm border-gray-600 text-gray-400 hover:bg-gray-800">Cancel</button>
-                </div>
-            </form>
+            </div>
+            
+            <div class="flex gap-2 mb-4">
+                <button onclick="setAmount(0.01)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800">0.01</button>
+                <button onclick="setAmount(0.1)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800">0.1</button>
+                <button onclick="setAmount(0.5)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800">0.5</button>
+                <button onclick="setAmount(1)" class="flex-1 py-2 bg-gray-900 rounded text-xs text-gray-400 border border-gray-800">1.0</button>
+            </div>
+            
+            <button onclick="copyBankrTweet()" class="btn-primary w-full mb-2 text-sm">Copy Tweet & Open X</button>
+            
+            <div class="flex gap-2">
+                <button onclick="processDirectDonation()" class="btn-secondary flex-1 text-sm">Donate Direct</button>
+                <button onclick="closeDonateModal()" class="btn-outline flex-1 text-sm">Cancel</button>
+            </div>
             
             <p class="text-xs text-gray-500 text-center mt-3">
                 3% fee • 97% to creator • Powered by @bankrbot
@@ -582,10 +665,10 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="hidden fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 bg-gray-900 text-white rounded-lg shadow-lg px-4 py-3 max-w-sm text-center border border-gray-800" role="alert" aria-live="polite">
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 bg-gray-900 text-white rounded-lg shadow-lg px-4 py-3 max-w-sm text-center border border-gray-800">
         <div class="flex items-center justify-center gap-2">
-            <span id="toastIcon" class="text-lg" aria-hidden="true">✓</span>
+            <span id="toastIcon" class="text-lg">✓</span>
             <div>
                 <div id="toastTitle" class="font-semibold text-sm">Success</div>
                 <div id="toastMessage" class="text-xs text-gray-400">Done</div>
@@ -594,997 +677,717 @@
     </div>
 
     <script>
-        /**
-         * Tweet to Give - Production Ready MVP
-         * Security-focused, modular architecture
-         */
-        
         // ==================== CONFIGURATION ====================
-        const CONFIG = Object.freeze({
-            // Network Configuration
-            CHAIN_ID: '0x14a34', // Base Sepolia
-            CHAIN_ID_DECIMAL: 84532,
+        const CONFIG = {
+            CHAIN_ID: '0x14a34',
             RPC_URL: 'https://sepolia.base.org',
             EXPLORER_URL: 'https://sepolia.basescan.org',
-            
-            // Contract Addresses - MUST be set via environment or config
-            get CAMPAIGN_FACTORY() {
-                const addr = localStorage.getItem('T2G_FACTORY_ADDRESS');
-                return addr || ''; // Empty default forces explicit setup
-            },
-            get TREASURY_WALLET() {
-                const addr = localStorage.getItem('T2G_TREASURY_ADDRESS');
-                return addr || '';
-            },
-            
-            // Bot Configuration
+            CAMPAIGN_FACTORY: '0x4e0e90f25b72be8cb62c341922c82167ae271f08',
+            TREASURY_WALLET: '0x4e0e90f25b72be8cb62c341922c82167ae271f08',
             BANKR_BOT_HANDLE: '@bankrbot',
             HASHTAG: '#tweetgiveonbase',
-            
-            // Validation
-            MIN_DONATION: 0.001,
-            MAX_DONATION: 100,
-            MAX_MESSAGE_LENGTH: 100,
-            
-            // API
             API_BASE: 'https://api.tweet2give.xyz',
-            
-            // Features
-            ENABLE_MOCK_DATA: false // Set true only for development
-        });
-
-        // ==================== SECURITY UTILITIES ====================
-        const Security = {
-            // XSS Prevention: Escape HTML entities
-            escapeHtml(text) {
-                if (typeof text !== 'string') return '';
-                const div = document.createElement('div');
-                div.textContent = text;
-                return div.innerHTML;
-            },
-            
-            // Validate Ethereum address
-            isValidAddress(address) {
-                return /^0x[a-fA-F0-9]{40}$/.test(address);
-            },
-            
-            // Sanitize number input
-            sanitizeNumber(value, min = 0, max = Infinity) {
-                const num = parseFloat(value);
-                if (isNaN(num)) return null;
-                if (num < min || num > max) return null;
-                return num;
-            },
-            
-            // Generate cryptographically secure random string
-            generateSecureToken(length = 32) {
-                const array = new Uint8Array(length);
-                crypto.getRandomValues(array);
-                return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-            },
-            
-            // Validate campaign ID
-            isValidCampaignId(id) {
-                return Number.isInteger(Number(id)) && Number(id) > 0;
-            }
+            BANKR_API: 'https://api.bankr.xyz/v1'
         };
 
-        // ==================== STATE MANAGEMENT ====================
-        class StateManager {
-            constructor() {
-                this.state = {
-                    account: null,
-                    user: null,
-                    campaigns: [],
-                    currentCampaign: null,
-                    isMiniApp: false,
-                    isConnecting: false,
-                    pendingTransactions: new Set()
-                };
-                this.listeners = new Map();
+        // ==================== STATE ====================
+        let currentAccount = null;
+        let currentUser = null;
+        let campaigns = [];
+        let currentCampaign = null;
+        let isMiniApp = false;
+        let provider = null;
+        let viemClient = null;
+        let walletClient = null;
+
+        // ==================== INITIALIZATION ====================
+        document.addEventListener('DOMContentLoaded', async () => {
+            isMiniApp = detectMiniApp();
+            if (isMiniApp) {
+                document.body.classList.add('in-mini-app');
+                await initMiniKit();
             }
             
-            get(key) {
-                return this.state[key];
-            }
-            
-            set(key, value) {
-                const oldValue = this.state[key];
-                this.state[key] = value;
-                this.notify(key, value, oldValue);
-            }
-            
-            subscribe(key, callback) {
-                if (!this.listeners.has(key)) {
-                    this.listeners.set(key, new Set());
+            await initViem();
+            await initProvider();
+            await loadCampaigns();
+            setupPullToRefresh();
+            checkExistingSession();
+        });
+
+        function detectMiniApp() {
+            return window.ethereum?.isCoinbaseWallet || 
+                   window.navigator.userAgent.includes('CoinbaseWallet') ||
+                   typeof MiniKit !== 'undefined';
+        }
+
+        async function initMiniKit() {
+            try {
+                if (typeof MiniKit !== 'undefined') {
+                    await MiniKit.init();
+                    console.log('MiniKit initialized');
                 }
-                this.listeners.get(key).add(callback);
-                return () => this.listeners.get(key).delete(callback);
+            } catch (err) {
+                console.error('MiniKit init failed:', err);
+            }
+        }
+
+        async function initViem() {
+            if (typeof window.viem === 'undefined') {
+                console.warn('Viem not loaded');
+                return;
             }
             
-            notify(key, newValue, oldValue) {
-                if (this.listeners.has(key)) {
-                    this.listeners.get(key).forEach(cb => cb(newValue, oldValue));
+            const { createPublicClient, http } = window.viem;
+            const { baseSepolia } = window.viem.chains;
+            
+            viemClient = createPublicClient({
+                chain: baseSepolia,
+                transport: http(CONFIG.RPC_URL)
+            });
+        }
+
+        async function initProvider() {
+            if (!window.ethereum) {
+                console.log('No ethereum provider found');
+                return;
+            }
+            
+            provider = window.ethereum;
+            
+            if (typeof window.viem !== 'undefined') {
+                const { createWalletClient, custom } = window.viem;
+                const { baseSepolia } = window.viem.chains;
+                
+                walletClient = createWalletClient({
+                    chain: baseSepolia,
+                    transport: custom(provider)
+                });
+            }
+            
+            try {
+                const accounts = await provider.request({ method: 'eth_accounts' });
+                if (accounts.length > 0) {
+                    currentAccount = accounts[0];
+                    currentUser = { type: 'wallet', address: currentAccount };
+                    updateConnectButton();
+                }
+            } catch (err) {
+                console.error('Provider init error:', err);
+            }
+            
+            provider.on('accountsChanged', (accounts) => {
+                currentAccount = accounts.length > 0 ? accounts[0] : null;
+                currentUser = currentAccount ? { type: 'wallet', address: currentAccount } : null;
+                updateConnectButton();
+            });
+            
+            provider.on('chainChanged', (chainId) => {
+                if (chainId !== CONFIG.CHAIN_ID) {
+                    showToast('Wrong Network', 'Please switch to Base Sepolia', '⚠️');
+                }
+            });
+        }
+
+        // ==================== AUTH & LOGIN ====================
+        function toggleLoginModal() {
+            const modal = document.getElementById('loginModal');
+            if (modal) {
+                modal.classList.toggle('hidden');
+            }
+        }
+
+        function handleGoogleLogin(response) {
+            try {
+                const credential = response.credential;
+                const payload = JSON.parse(atob(credential.split('.')[1]));
+                
+                currentUser = {
+                    type: 'google',
+                    email: payload.email,
+                    name: payload.name,
+                    picture: payload.picture,
+                    sub: payload.sub
+                };
+                
+                showToast('Welcome', `Logged in as ${payload.name}`, '✓');
+                toggleLoginModal();
+                updateConnectButton();
+                
+                localStorage.setItem('ttgb_user', JSON.stringify(currentUser));
+            } catch (err) {
+                console.error('Google login error:', err);
+                showToast('Error', 'Login failed', '❌');
+            }
+        }
+
+        async function loginWithX() {
+            showToast('Coming Soon', 'X login will be available soon', '⏳');
+        }
+
+        function checkExistingSession() {
+            const saved = localStorage.getItem('ttgb_user');
+            if (saved) {
+                try {
+                    currentUser = JSON.parse(saved);
+                    updateConnectButton();
+                } catch (e) {
+                    localStorage.removeItem('ttgb_user');
                 }
             }
         }
 
-        const state = new StateManager();
-
-        // ==================== BLOCKCHAIN SERVICE ====================
-        class BlockchainService {
-            constructor() {
-                this.provider = null;
-                this.walletClient = null;
-                this.publicClient = null;
-                this.initialized = false;
-            }
-            
-            async initialize() {
-                if (this.initialized) return;
+        // ==================== WALLET CONNECTION ====================
+        async function connectWallet() {
+            try {
+                if (isMiniApp && typeof MiniKit !== 'undefined') {
+                    MiniKit.hapticFeedback('light');
+                }
                 
-                try {
-                    const { createPublicClient, createWalletClient, custom, http } = window.viem;
-                    const { baseSepolia } = window.viem.chains;
-                    
-                    // Initialize public client for reading
-                    this.publicClient = createPublicClient({
-                        chain: baseSepolia,
-                        transport: http(CONFIG.RPC_URL)
-                    });
-                    
-                    // Initialize provider if available
-                    if (window.ethereum) {
-                        this.provider = window.ethereum;
-                        
-                        this.walletClient = createWalletClient({
-                            chain: baseSepolia,
-                            transport: custom(this.provider)
+                if (!provider) {
+                    showToast('Error', 'Please install Coinbase Wallet', '⚠️');
+                    return;
+                }
+                
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                if (accounts.length === 0) return;
+                
+                currentAccount = accounts[0];
+                currentUser = { type: 'wallet', address: currentAccount };
+                
+                await ensureCorrectNetwork();
+                updateConnectButton();
+                showToast('Connected', formatAddress(currentAccount), '✓');
+                
+                if (isMiniApp && typeof MiniKit !== 'undefined') {
+                    MiniKit.hapticFeedback('success');
+                }
+            } catch (err) {
+                console.error('Connection error:', err);
+                showToast('Error', err.message || 'Connection failed', '❌');
+            }
+        }
+
+        async function ensureCorrectNetwork() {
+            try {
+                const chainId = await provider.request({ method: 'eth_chainId' });
+                if (chainId !== CONFIG.CHAIN_ID) {
+                    try {
+                        await provider.request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: CONFIG.CHAIN_ID }]
                         });
-                        
-                        // Setup event listeners
-                        this.provider.on('accountsChanged', this.handleAccountsChanged.bind(this));
-                        this.provider.on('chainChanged', this.handleChainChanged.bind(this));
-                        this.provider.on('disconnect', this.handleDisconnect.bind(this));
-                        
-                        // Check existing connection
-                        const accounts = await this.provider.request({ method: 'eth_accounts' });
-                        if (accounts.length > 0) {
-                            await this.connectAccount(accounts[0]);
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            await provider.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: CONFIG.CHAIN_ID,
+                                    chainName: 'Base Sepolia',
+                                    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                    rpcUrls: [CONFIG.RPC_URL],
+                                    blockExplorerUrls: [CONFIG.EXPLORER_URL]
+                                }]
+                            });
                         }
                     }
-                    
-                    this.initialized = true;
-                } catch (error) {
-                    console.error('Blockchain initialization failed:', error);
-                    throw error;
+                }
+            } catch (err) {
+                console.error('Network error:', err);
+            }
+        }
+
+        function updateConnectButton() {
+            const btn = document.getElementById('connectBtn');
+            const walletDisplay = document.getElementById('walletDisplay');
+            
+            if (!btn) return;
+            
+            if (currentUser) {
+                const display = currentUser.name || currentUser.email || formatAddress(currentUser.address);
+                btn.textContent = display;
+                btn.classList.remove('btn-primary');
+                btn.classList.add('bg-gray-800', 'text-white', 'border', 'border-gray-700');
+                
+                if (walletDisplay) {
+                    walletDisplay.textContent = formatAddress(currentUser.address) || 'Connected';
+                }
+            } else {
+                btn.textContent = 'Connect';
+                btn.classList.add('btn-primary');
+                btn.classList.remove('bg-gray-800', 'text-white', 'border', 'border-gray-700');
+                
+                if (walletDisplay) {
+                    walletDisplay.textContent = 'Not Connected';
                 }
             }
+        }
+
+        // ==================== BANKR BOT INTEGRATION ====================
+        function generateBankrTweet(campaign, amount, message) {
+            const cleanMessage = message ? message.substring(0, 50) : 'love what you are building';
+            return `Hey ${campaign.creatorX}, ${cleanMessage}. Sending ${amount} ETH to help out 💙 ${CONFIG.BANKR_BOT_HANDLE} ${CONFIG.HASHTAG} ${campaign.id}`;
+        }
+
+        function updateBankrPreview() {
+            if (!currentCampaign) return;
             
-            async connectAccount(address) {
-                if (!Security.isValidAddress(address)) {
-                    throw new Error('Invalid address format');
-                }
-                
-                const chainId = await this.provider.request({ method: 'eth_chainId' });
-                if (chainId !== CONFIG.CHAIN_ID) {
-                    await this.switchNetwork();
-                }
-                
-                state.set('account', address);
-                state.set('user', { type: 'wallet', address });
-                this.updateUI();
+            const amount = document.getElementById('donateAmount')?.value || '0.1';
+            const message = document.getElementById('donateMessage')?.value || 'love what you are building';
+            
+            const preview = document.getElementById('bankrTweetPreview');
+            if (preview) {
+                preview.textContent = generateBankrTweet(currentCampaign, amount, message);
+            }
+        }
+
+        async function copyBankrTweet() {
+            if (!currentCampaign) return;
+            
+            const amount = document.getElementById('donateAmount')?.value || '0.1';
+            const message = document.getElementById('donateMessage')?.value || 'love what you are building';
+            
+            const tweetText = generateBankrTweet(currentCampaign, amount, message);
+            
+            try {
+                await navigator.clipboard.writeText(tweetText);
+                const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+                window.open(xUrl, '_blank');
+                showToast('Copied!', 'Tweet copied, opening X...', '✓');
+            } catch (err) {
+                showToast('Error', 'Failed to copy', '❌');
+            }
+        }
+
+        // ==================== DIRECT DONATION ====================
+        async function processDirectDonation() {
+            const amount = document.getElementById('donateAmount')?.value;
+            
+            if (!amount || parseFloat(amount) <= 0) {
+                showToast('Error', 'Enter valid amount', '⚠️');
+                return;
             }
             
-            async requestConnection() {
-                if (!this.provider) {
-                    throw new Error('No wallet provider found. Please install Coinbase Wallet or MetaMask.');
-                }
-                
-                if (state.get('isConnecting')) {
-                    throw new Error('Connection already in progress');
-                }
-                
-                state.set('isConnecting', true);
-                
-                try {
-                    const accounts = await this.provider.request({ 
-                        method: 'eth_requestAccounts' 
-                    });
-                    
-                    if (accounts.length === 0) {
-                        throw new Error('No accounts found');
-                    }
-                    
-                    await this.connectAccount(accounts[0]);
-                    return accounts[0];
-                } finally {
-                    state.set('isConnecting', false);
-                }
+            if (!currentAccount) {
+                await connectWallet();
+                return;
             }
             
-            async switchNetwork() {
-                try {
-                    await this.provider.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: CONFIG.CHAIN_ID }]
-                    });
-                } catch (switchError) {
-                    if (switchError.code === 4902) {
-                        await this.provider.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: CONFIG.CHAIN_ID,
-                                chainName: 'Base Sepolia',
-                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-                                rpcUrls: [CONFIG.RPC_URL],
-                                blockExplorerUrls: [CONFIG.EXPLORER_URL]
-                            }]
-                        });
-                    } else {
-                        throw switchError;
-                    }
-                }
+            if (!currentCampaign) {
+                showToast('Error', 'No campaign selected', '⚠️');
+                return;
             }
             
-            async donate(campaignId, amount) {
-                const account = state.get('account');
-                if (!account) throw new Error('Wallet not connected');
-                if (!Security.isValidCampaignId(campaignId)) throw new Error('Invalid campaign ID');
-                
-                const sanitizedAmount = Security.sanitizeNumber(amount, CONFIG.MIN_DONATION, CONFIG.MAX_DONATION);
-                if (!sanitizedAmount) throw new Error(`Invalid amount. Must be between ${CONFIG.MIN_DONATION} and ${CONFIG.MAX_DONATION} ETH`);
-                
-                // Check contract address is set
-                if (!CONFIG.CAMPAIGN_FACTORY) {
-                    throw new Error('Campaign factory address not configured');
+            closeDonateModal();
+            showToast('Processing', 'Sending transaction...', '⏳');
+            
+            try {
+                if (!walletClient || typeof window.viem === 'undefined') {
+                    throw new Error('Wallet not ready');
                 }
                 
                 const { parseEther } = window.viem;
-                const txHash = await this.walletClient.writeContract({
+                
+                const txHash = await walletClient.writeContract({
                     address: CONFIG.CAMPAIGN_FACTORY,
-                    abi: this.getCampaignABI(),
-                    functionName: 'donate',
-                    args: [BigInt(campaignId)],
-                    value: parseEther(amount.toString()),
-                    account
-                });
-                
-                return txHash;
-            }
-            
-            async waitForReceipt(txHash) {
-                return await this.publicClient.waitForTransactionReceipt({
-                    hash: txHash,
-                    timeout: 60_000 // 60 seconds
-                });
-            }
-            
-            handleAccountsChanged(accounts) {
-                if (accounts.length === 0) {
-                    this.disconnect();
-                } else if (accounts[0] !== state.get('account')) {
-                    this.connectAccount(accounts[0]);
-                }
-            }
-            
-            handleChainChanged(chainId) {
-                if (chainId !== CONFIG.CHAIN_ID) {
-                    app.showToast('Wrong Network', 'Please switch to Base Sepolia', '⚠️');
-                    state.set('account', null);
-                    this.updateUI();
-                }
-            }
-            
-            handleDisconnect() {
-                this.disconnect();
-            }
-            
-            disconnect() {
-                state.set('account', null);
-                state.set('user', null);
-                this.updateUI();
-            }
-            
-            updateUI() {
-                const account = state.get('account');
-                const btn = document.getElementById('connectBtn');
-                const walletDisplay = document.getElementById('walletDisplay');
-                
-                if (btn) {
-                    if (account) {
-                        btn.textContent = app.formatAddress(account);
-                        btn.classList.remove('btn-primary');
-                        btn.classList.add('bg-gray-800', 'text-white', 'border', 'border-gray-700');
-                    } else {
-                        btn.textContent = 'Connect Wallet';
-                        btn.classList.add('btn-primary');
-                        btn.classList.remove('bg-gray-800', 'text-white', 'border', 'border-gray-700');
-                    }
-                }
-                
-                if (walletDisplay) {
-                    walletDisplay.textContent = account ? app.formatAddress(account) : 'Not Connected';
-                }
-            }
-            
-            getCampaignABI() {
-                return [
-                    {
+                    abi: [{
                         inputs: [{ name: "_campaignId", type: "uint256" }],
                         name: "donate",
                         outputs: [],
                         stateMutability: "payable",
                         type: "function"
-                    }
-                ];
-            }
-        }
-
-        // ==================== CAMPAIGN SERVICE ====================
-        class CampaignService {
-            constructor() {
-                this.cache = new Map();
-                this.cacheExpiry = 5 * 60 * 1000; // 5 minutes
-            }
-            
-            async fetchCampaigns() {
-                // Check cache
-                const cached = this.cache.get('campaigns');
-                if (cached && Date.now() - cached.timestamp < this.cacheExpiry) {
-                    return cached.data;
-                }
-                
-                try {
-                    let campaigns;
-                    
-                    // Try to fetch from blockchain if configured
-                    if (CONFIG.CAMPAIGN_FACTORY && blockchain.publicClient) {
-                        campaigns = await this.fetchFromContract();
-                    }
-                    
-                    // Fallback to API or mock
-                    if (!campaigns || campaigns.length === 0) {
-                        if (CONFIG.ENABLE_MOCK_DATA) {
-                            campaigns = this.getMockCampaigns();
-                        } else {
-                            campaigns = await this.fetchFromAPI();
-                        }
-                    }
-                    
-                    // Validate and sanitize
-                    campaigns = campaigns.map(c => this.sanitizeCampaign(c));
-                    
-                    // Update cache
-                    this.cache.set('campaigns', { data: campaigns, timestamp: Date.now() });
-                    
-                    return campaigns;
-                } catch (error) {
-                    console.error('Failed to fetch campaigns:', error);
-                    throw error;
-                }
-            }
-            
-            async fetchFromContract() {
-                // Implementation would go here when contract is ready
-                return null;
-            }
-            
-            async fetchFromAPI() {
-                const response = await fetch(`${CONFIG.API_BASE}/campaigns`, {
-                    headers: { 'Accept': 'application/json' }
+                    }],
+                    functionName: 'donate',
+                    args: [BigInt(currentCampaign.id)],
+                    value: parseEther(amount),
+                    account: currentAccount
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
+                showToast('Pending', 'Waiting for confirmation...', '⏳');
                 
-                return await response.json();
-            }
-            
-            sanitizeCampaign(campaign) {
-                return {
-                    id: Number(campaign.id),
-                    title: Security.escapeHtml(campaign.title),
-                    description: Security.escapeHtml(campaign.description),
-                    category: Security.escapeHtml(campaign.category),
-                    creator: Security.escapeHtml(campaign.creator),
-                    creatorX: Security.escapeHtml(campaign.creatorX),
-                    creatorAddress: campaign.creatorAddress, // Keep raw for validation
-                    target: Number(campaign.target),
-                    raised: Number(campaign.raised),
-                    donors: Number(campaign.donors),
-                    daysLeft: Number(campaign.daysLeft),
-                    image: Security.escapeHtml(campaign.image),
-                    milestones: Array.isArray(campaign.milestones) ? campaign.milestones.map(m => ({
-                        percent: Number(m.percent),
-                        title: Security.escapeHtml(m.title),
-                        status: Security.escapeHtml(m.status),
-                        proof: Security.escapeHtml(m.proof)
-                    })) : []
-                };
-            }
-            
-            getMockCampaigns() {
-                return [
-                    {
-                        id: 1,
-                        title: "Coding School Papua",
-                        category: "education",
-                        creator: "sekolah.base.eth",
-                        creatorX: "@sekolahkode",
-                        creatorAddress: "0x7a2F9e8B3cD4E5f6A7B8C9D0E1F2A3B4C5D6E7F8",
-                        description: "Laptops & coding for 50 students in rural Papua. Every donation tracked onchain via @bankrbot.",
-                        target: 10,
-                        raised: 7.5,
-                        donors: 45,
-                        daysLeft: 12,
-                        image: "📚",
-                        milestones: [
-                            { percent: 25, title: "Purchase Laptops", status: "completed", proof: "Receipt verified" },
-                            { percent: 50, title: "Hire Teachers", status: "active", proof: "In progress" },
-                            { percent: 75, title: "Internet Setup", status: "pending", proof: "-" }
-                        ]
+                const receipt = await viemClient.waitForTransactionReceipt({
+                    hash: txHash
+                });
+                
+                if (receipt.status === 'success') {
+                    showToast('Success!', `Donated ${amount} ETH`, '✓');
+                    await loadCampaigns();
+                    
+                    if (isMiniApp && typeof MiniKit !== 'undefined') {
+                        MiniKit.share({
+                            title: `I donated ${amount} ETH to ${currentCampaign.title}`,
+                            url: `https://tweet2give.xyz/campaign/${currentCampaign.id}`
+                        });
                     }
-                ];
-            }
-            
-            getById(id) {
-                const campaigns = state.get('campaigns');
-                return campaigns.find(c => c.id === Number(id));
-            }
-        }
-
-        // ==================== UI CONTROLLER ====================
-        class UIController {
-            constructor() {
-                this.currentPage = 'home';
-                this.init();
-            }
-            
-            init() {
-                // Setup global error handling
-                window.onerror = (msg, url, line) => {
-                    console.error('Global error:', msg, url, line);
-                    app.showToast('Error', 'Something went wrong. Please try again.', '❌');
-                    return true;
-                };
-                
-                // Setup escape key for modals
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape') {
-                        this.closeAllModals();
-                    }
-                });
-                
-                // Setup click outside modal to close
-                document.getElementById('loginModal')?.addEventListener('click', (e) => {
-                    if (e.target === e.currentTarget) this.toggleLoginModal(false);
-                });
-                
-                document.getElementById('donateModal')?.addEventListener('click', (e) => {
-                    if (e.target === e.currentTarget) this.closeDonateModal();
-                });
-            }
-            
-            navigate(page) {
-                // Hide all pages
-                document.querySelectorAll('[id^="page-"]').forEach(el => {
-                    el.classList.add('hidden');
-                });
-                
-                // Show target page
-                const target = document.getElementById(`page-${page}`);
-                if (target) {
-                    target.classList.remove('hidden');
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                    this.currentPage = page;
-                }
-                
-                // Close mobile menu
-                const mobileMenu = document.getElementById('mobileMenu');
-                if (mobileMenu) {
-                    mobileMenu.classList.add('hidden');
-                    document.getElementById('mobileMenuBtn')?.setAttribute('aria-expanded', 'false');
-                }
-                
-                // Update campaigns if navigating to explore
-                if (page === 'explore' || page === 'home') {
-                    this.updateCampaignsUI();
-                }
-            }
-            
-            toggleLoginModal(show) {
-                const modal = document.getElementById('loginModal');
-                if (!modal) return;
-                
-                if (typeof show === 'boolean') {
-                    modal.classList.toggle('active', show);
                 } else {
-                    modal.classList.toggle('active');
+                    throw new Error('Transaction failed');
                 }
-                
-                // Update ARIA
-                const isOpen = modal.classList.contains('active');
-                modal.setAttribute('aria-hidden', !isOpen);
+            } catch (err) {
+                console.error('Donation error:', err);
+                showToast('Error', err.message || 'Transaction failed', '❌');
             }
-            
-            closeAllModals() {
-                this.toggleLoginModal(false);
-                this.closeDonateModal();
-            }
-            
-            toggleMobileMenu() {
-                const menu = document.getElementById('mobileMenu');
-                const btn = document.getElementById('mobileMenuBtn');
-                if (menu) {
-                    const isHidden = menu.classList.contains('hidden');
-                    menu.classList.toggle('hidden');
-                    btn?.setAttribute('aria-expanded', !isHidden);
+        }
+
+        // ==================== DATA LOADING ====================
+        async function loadCampaigns() {
+            try {
+                // Try contract first
+                if (viemClient) {
+                    const campaignsData = await fetchCampaignsFromContract();
+                    if (campaignsData && campaignsData.length > 0) {
+                        campaigns = campaignsData;
+                        updateUI();
+                        return;
+                    }
                 }
+            } catch (err) {
+                console.log('Contract fetch failed, using mock:', err);
             }
             
-            updateCampaignsUI() {
-                const campaigns = state.get('campaigns');
-                this.renderFeatured(campaigns);
-                this.renderCampaignList(campaigns);
-                this.updateStats(campaigns);
-            }
-            
-            renderFeatured(campaigns) {
-                const container = document.getElementById('featuredCampaigns');
-                if (!container) return;
-                
-                if (campaigns.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No campaigns found</p>';
-                    return;
+            // Fallback to mock
+            campaigns = getMockCampaigns();
+            updateUI();
+        }
+
+        async function fetchCampaignsFromContract() {
+            // Placeholder for actual contract call
+            return null;
+        }
+
+        function getMockCampaigns() {
+            return [
+                {
+                    id: 1,
+                    title: "Coding School Papua",
+                    category: "marginalized",
+                    creator: "sekolah.base.eth",
+                    creatorX: "@sekolahkode",
+                    creatorAddress: "0x7a2F9e8B3cD4E5f6A7B8C9D0E1F2A3B4C5D6E7F8",
+                    description: "Laptops & coding for 50 students in rural Papua. Every donation tracked onchain via @bankrbot.",
+                    target: 10,
+                    raised: 7.5,
+                    donors: 45,
+                    daysLeft: 12,
+                    image: "📚",
+                    milestones: [
+                        { percent: 25, title: "Purchase Laptops", status: "completed", proof: "Receipt verified" },
+                        { percent: 50, title: "Hire Teachers", status: "active", proof: "In progress" },
+                        { percent: 75, title: "Internet Setup", status: "pending", proof: "-" },
+                        { percent: 100, title: "Graduation", status: "pending", proof: "-" }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "Base Bootcamp Jakarta",
+                    category: "base",
+                    creator: "builders.base.eth",
+                    creatorX: "@basebuilders",
+                    creatorAddress: "0x3B8C2A1F9E8D7C6B5A4F3E2D1C0B9A8F7E6D5C4",
+                    description: "3-month bootcamp for 30 Base developers. Support via @bankrbot #tweetgiveonbase",
+                    target: 15,
+                    raised: 12.3,
+                    donors: 89,
+                    daysLeft: 5,
+                    image: "⛓️",
+                    milestones: [
+                        { percent: 30, title: "Curriculum", status: "completed", proof: "Verified" },
+                        { percent: 60, title: "First Cohort", status: "active", proof: "In progress" },
+                        { percent: 100, title: "Demo Day", status: "pending", proof: "-" }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "Deaf Scholarships",
+                    category: "marginalized",
+                    creator: "sahabat.base.eth",
+                    creatorX: "@sahabattuli",
+                    creatorAddress: "0x9D4E7F6C5B4A3F2E1D0C9B8A7F6E5D4C3B2A1F0",
+                    description: "University scholarships for 20 deaf students. Transparent funding with @bankrbot.",
+                    target: 8,
+                    raised: 3.2,
+                    donors: 28,
+                    daysLeft: 25,
+                    image: "🎓",
+                    milestones: [
+                        { percent: 40, title: "Semester 1", status: "active", proof: "Processing" },
+                        { percent: 100, title: "Full Year", status: "pending", proof: "-" }
+                    ]
                 }
-                
-                container.innerHTML = campaigns.slice(0, 3).map(c => this.createCard(c)).join('');
-            }
+            ];
+        }
+
+        // ==================== UI FUNCTIONS ====================
+        function updateUI() {
+            updateStats();
+            renderFeatured();
+            renderCampaigns(campaigns);
+        }
+
+        function updateStats() {
+            const total = campaigns.reduce((sum, c) => sum + c.raised, 0);
+            const verified = campaigns.filter(c => c.creator.endsWith('.base.eth')).length;
             
-            renderCampaignList(campaigns) {
-                const container = document.getElementById('campaignsList');
-                if (!container) return;
-                
-                if (campaigns.length === 0) {
-                    container.innerHTML = '<p class="text-gray-500 col-span-full text-center py-8">No campaigns found</p>';
-                    return;
-                }
-                
-                container.innerHTML = campaigns.map(c => this.createCard(c)).join('');
-            }
+            const statRaised = document.getElementById('statTotalRaised');
+            const statCampaigns = document.getElementById('statCampaigns');
+            const statVerified = document.getElementById('statVerified');
             
-            createCard(campaign) {
-                const percent = Math.min(Math.round((campaign.raised / campaign.target) * 100), 100);
+            if (statRaised) statRaised.textContent = total.toFixed(1) + ' ETH';
+            if (statCampaigns) statCampaigns.textContent = campaigns.length;
+            if (statVerified) statVerified.textContent = verified;
+        }
+
+        function renderFeatured() {
+            const container = document.getElementById('featuredCampaigns');
+            if (container) container.innerHTML = campaigns.slice(0, 3).map(c => createCard(c)).join('');
+        }
+
+        function renderCampaigns(list) {
+            const container = document.getElementById('campaignsList');
+            if (container) container.innerHTML = list.map(c => createCard(c)).join('');
+        }
+
+        function createCard(c) {
+            const percent = Math.round((c.raised / c.target) * 100);
+            
+            return `
+                <div class="card p-4 cursor-pointer" onclick="showDetail(${c.id})">
+                    <div class="flex justify-between items-start mb-3">
+                        <span class="badge-category">Verified</span>
+                        <span class="text-2xl">${c.image}</span>
+                    </div>
+                    <h4 class="font-bold text-base mb-2 text-white line-clamp-1">${c.title}</h4>
+                    <p class="text-xs text-gray-400 mb-3 line-clamp-2">${c.description}</p>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="basename-badge text-xs">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                            ${c.creator}
+                        </div>
+                    </div>
+
+                    <div class="progress-bar mb-2">
+                        <div class="progress-fill" style="width: ${percent}%"></div>
+                    </div>
+                    <div class="flex justify-between text-xs mb-2">
+                        <span class="font-semibold text-white">${percent}%</span>
+                        <span class="text-gray-500">${c.raised}/${c.target} ETH</span>
+                    </div>
+                    
+                    <div class="flex justify-between text-xs text-gray-500 pt-2 border-t border-gray-800">
+                        <span>${c.donors} donors</span>
+                        <span>${c.daysLeft}d left</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showDetail(id) {
+            currentCampaign = campaigns.find(c => c.id === id);
+            if (!currentCampaign) return;
+            
+            const percent = Math.round((currentCampaign.raised / currentCampaign.target) * 100);
+            
+            const milestonesHtml = currentCampaign.milestones.map(m => {
+                const dotClass = m.status === 'completed' ? 'completed' : m.status === 'active' ? 'active' : '';
+                const statusColor = m.status === 'completed' ? 'bg-blue-900 text-blue-300' : 
+                                   m.status === 'active' ? 'bg-yellow-900 text-yellow-300' : 'bg-gray-800 text-gray-500';
                 
                 return `
-                    <article class="card p-4 cursor-pointer hover:border-base transition-all" onclick="app.showDetail(${campaign.id})" role="button" tabindex="0" aria-label="View ${campaign.title}">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="badge-category">Verified</span>
-                            <span class="text-2xl" aria-hidden="true">${campaign.image}</span>
+                    <div class="flex gap-3 mb-4">
+                        <div class="flex-shrink-0 pt-1">
+                            <div class="milestone-dot ${dotClass}"></div>
                         </div>
-                        <h4 class="font-bold text-base mb-2 text-white line-clamp-1">${campaign.title}</h4>
-                        <p class="text-xs text-gray-400 mb-3 line-clamp-2">${campaign.description}</p>
-                        
-                        <div class="flex items-center gap-2 mb-3">
-                            <div class="basename-badge text-xs">
-                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                </svg>
-                                ${campaign.creator}
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-semibold text-sm text-white">${m.percent}% — ${m.title}</span>
+                                <span class="text-xs px-2 py-0.5 rounded-full ${statusColor}">${m.status}</span>
                             </div>
+                            <p class="text-xs text-gray-500">${m.proof}</p>
                         </div>
-
-                        <div class="progress-bar mb-2" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
-                            <div class="progress-fill" style="width: ${percent}%"></div>
-                        </div>
-                        <div class="flex justify-between text-xs mb-2">
-                            <span class="font-semibold text-white">${percent}%</span>
-                            <span class="text-gray-500">${campaign.raised}/${campaign.target} ETH</span>
-                        </div>
-                        
-                        <div class="flex justify-between text-xs text-gray-500 pt-2 border-t border-gray-800">
-                            <span>${campaign.donors} donors</span>
-                            <span>${campaign.daysLeft}d left</span>
-                        </div>
-                    </article>
+                    </div>
                 `;
-            }
+            }).join('');
             
-            updateStats(campaigns) {
-                const total = campaigns.reduce((sum, c) => sum + c.raised, 0);
-                const verified = campaigns.filter(c => c.creator.endsWith('.base.eth')).length;
-                
-                const statRaised = document.getElementById('statTotalRaised');
-                const statCampaigns = document.getElementById('statCampaigns');
-                const statVerified = document.getElementById('statVerified');
-                
-                if (statRaised) statRaised.textContent = total.toFixed(1) + ' ETH';
-                if (statCampaigns) statCampaigns.textContent = campaigns.length;
-                if (statVerified) statVerified.textContent = verified;
-            }
+            const detailContent = document.getElementById('detailContent');
+            if (!detailContent) return;
             
-            showDetail(id) {
-                const campaign = campaignService.getById(id);
-                if (!campaign) {
-                    app.showToast('Error', 'Campaign not found', '❌');
-                    return;
-                }
-                
-                state.set('currentCampaign', campaign);
-                const percent = Math.min(Math.round((campaign.raised / campaign.target) * 100), 100);
-                
-                const milestonesHtml = campaign.milestones.map(m => {
-                    const dotClass = m.status === 'completed' ? 'bg-base' : m.status === 'active' ? 'bg-gold' : 'bg-gray-700';
-                    const statusColor = m.status === 'completed' ? 'text-green-400' : m.status === 'active' ? 'text-yellow-400' : 'text-gray-500';
-                    
-                    return `
-                        <div class="flex gap-3 mb-4">
-                            <div class="flex-shrink-0 pt-1">
-                                <div class="w-3 h-3 rounded-full ${dotClass}"></div>
+            detailContent.innerHTML = `
+                <div class="card overflow-hidden">
+                    <div class="h-32 bg-gray-900 flex items-center justify-center text-5xl border-b border-gray-800">
+                        ${currentCampaign.image}
+                    </div>
+                    <div class="p-5">
+                        <span class="badge-category mb-3">Verified Campaign</span>
+                        
+                        <h1 class="font-bold text-xl mb-3 text-white">${currentCampaign.title}</h1>
+                        
+                        <div class="flex items-center gap-2 mb-4 p-3 bg-gray-900 rounded-lg border border-gray-800">
+                            <div class="basename-badge text-xs">
+                                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                ${currentCampaign.creator}
                             </div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="font-semibold text-sm text-white">${m.percent}% — ${m.title}</span>
-                                    <span class="text-xs ${statusColor}">(${m.status})</span>
-                                </div>
-                                <p class="text-xs text-gray-500">${m.proof}</p>
-                            </div>
+                            <a href="https://x.com/${currentCampaign.creatorX.slice(1)}" target="_blank" class="text-xs text-gray-400 hover:text-white">${currentCampaign.creatorX}</a>
                         </div>
-                    `;
-                }).join('');
-                
-                const detailContent = document.getElementById('detailContent');
-                if (detailContent) {
-                    detailContent.innerHTML = `
-                        <div class="card overflow-hidden">
-                            <div class="h-32 bg-gray-900 flex items-center justify-center text-5xl border-b border-gray-800" aria-hidden="true">
-                                ${campaign.image}
-                            </div>
-                            <div class="p-5">
-                                <span class="badge-category mb-3 inline-block">Verified Campaign</span>
-                                
-                                <h1 class="font-bold text-xl mb-3 text-white">${campaign.title}</h1>
-                                
-                                <div class="flex items-center gap-2 mb-4 p-3 bg-gray-900 rounded-lg border border-gray-800">
-                                    <div class="basename-badge text-xs">
-                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                        </svg>
-                                        ${campaign.creator}
-                                    </div>
-                                    <a href="https://x.com/${campaign.creatorX.slice(1)}" target="_blank" rel="noopener noreferrer" class="text-xs text-gray-400 hover:text-white" onclick="event.stopPropagation()">${campaign.creatorX}</a>
-                                </div>
 
-                                <p class="text-gray-400 text-sm mb-5">${campaign.description}</p>
-                                
-                                <div class="mb-5">
-                                    <h3 class="font-bold text-sm mb-3 text-white">Milestones</h3>
-                                    ${milestonesHtml}
-                                </div>
-
-                                <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div>
-                                            <div class="text-2xl font-bold text-white">${percent}%</div>
-                                            <div class="text-xs text-gray-500">${campaign.raised} of ${campaign.target} ETH</div>
-                                        </div>
-                                        <div class="text-right">
-                                            <div class="text-xl font-bold text-white">${campaign.donors}</div>
-                                            <div class="text-xs text-gray-500">donors</div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="progress-bar mb-4" role="progressbar" aria-valuenow="${percent}" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-fill" style="width: ${percent}%"></div>
-                                    </div>
-                                    
-                                    <button onclick="app.openDonateModal()" class="btn-primary w-full mb-3 text-sm">Donate Now</button>
-                                    
-                                    <p class="text-xs text-gray-500 text-center">3% fee • 97% to creator • Powered by @bankrbot</p>
-                                </div>
-                            </div>
+                        <p class="text-gray-400 text-sm mb-5">${currentCampaign.description}</p>
+                        
+                        <div class="mb-5">
+                            <h3 class="font-bold text-sm mb-3 text-white">Milestones</h3>
+                            ${milestonesHtml}
                         </div>
-                    `;
-                }
-                
-                this.navigate('detail');
+
+                        <div class="bg-gray-900 p-4 rounded-lg border border-gray-800">
+                            <div class="flex items-center justify-between mb-3">
+                                <div>
+                                    <div class="text-2xl font-bold text-white">${percent}%</div>
+                                    <div class="text-xs text-gray-500">${currentCampaign.raised} of ${currentCampaign.target} ETH</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-xl font-bold text-white">${currentCampaign.donors}</div>
+                                    <div class="text-xs text-gray-500">donors</div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-bar mb-4">
+                                <div class="progress-fill" style="width: ${percent}%"></div>
+                            </div>
+                            
+                            <button onclick="openDonateModal()" class="btn-primary w-full mb-3 text-sm">Donate with @bankrbot</button>
+                            
+                            <div class="text-center">
+                                <p class="text-xs text-gray-500 mb-2">Or tweet directly:</p>
+                                <div class="bg-gray-950 p-3 rounded text-xs text-gray-400">
+                                    Hey ${currentCampaign.creatorX}, [your message]. Sending [amount] ETH 
+                                    <span class="text-base">@bankrbot</span> 
+                                    <span class="text-green-400">#tweetgiveonbase</span> ${currentCampaign.id}
+                                </div>
+                            </div>
+                            
+                            <p class="text-xs text-gray-500 text-center mt-3">3% fee • 97% to creator • Powered by @bankrbot</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showPage('detail');
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(`page-${page}`);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo(0, 0);
             }
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) mobileMenu.classList.add('hidden');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu) menu.classList.toggle('hidden');
+        }
+
+        function openDonateModal() {
+            if (!currentCampaign) return;
             
-            openDonateModal() {
-                const campaign = state.get('currentCampaign');
-                if (!campaign) return;
-                
-                // Reset form
-                const amountInput = document.getElementById('donateAmount');
-                const messageInput = document.getElementById('donateMessage');
-                if (amountInput) {
-                    amountInput.value = '0.1';
-                    amountInput.classList.remove('border-red-500');
-                }
-                if (messageInput) messageInput.value = '';
-                
-                document.getElementById('amountError')?.classList.remove('visible');
-                
-                app.updateBankrPreview();
-                
-                const modal = document.getElementById('donateModal');
-                if (modal) {
-                    modal.classList.add('active');
-                    modal.setAttribute('aria-hidden', 'false');
-                }
-            }
+            const amountInput = document.getElementById('donateAmount');
+            const messageInput = document.getElementById('donateMessage');
+            if (amountInput) amountInput.value = '0.1';
+            if (messageInput) messageInput.value = 'love what you are building';
             
-            closeDonateModal() {
-                const modal = document.getElementById('donateModal');
-                if (modal) {
-                    modal.classList.remove('active');
-                    modal.setAttribute('aria-hidden', 'true');
-                }
-            }
+            updateBankrPreview();
             
-            filterCategory(category) {
-                const campaigns = state.get('campaigns');
-                const filtered = category === 'all' ? campaigns : campaigns.filter(c => c.category === category);
-                this.renderCampaignList(filtered);
-            }
-            
-            showToast(title, message, icon = '✓') {
-                const toast = document.getElementById('toast');
-                const titleEl = document.getElementById('toastTitle');
-                const msgEl = document.getElementById('toastMessage');
-                const iconEl = document.getElementById('toastIcon');
-                
-                if (!toast || !titleEl || !msgEl || !iconEl) return;
-                
-                titleEl.textContent = title;
-                msgEl.textContent = message;
-                iconEl.textContent = icon;
-                
-                toast.classList.remove('hidden');
-                
-                // Clear existing timeout if any
-                if (this.toastTimeout) {
-                    clearTimeout(this.toastTimeout);
-                }
-                
-                this.toastTimeout = setTimeout(() => {
-                    toast.classList.add('hidden');
-                }, 4000);
-            }
-            
-            formatAddress(addr) {
-                if (!addr || typeof addr !== 'string') return '';
-                if (addr.length < 10) return addr;
-                return addr.slice(0, 6) + '...' + addr.slice(-4);
+            const modal = document.getElementById('donateModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closeDonateModal() {
+            const modal = document.getElementById('donateModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function setAmount(amt) {
+            const input = document.getElementById('donateAmount');
+            if (input) {
+                input.value = amt;
+                updateBankrPreview();
             }
         }
 
-        // ==================== MAIN APP CONTROLLER ====================
-        class App {
-            constructor() {
-                this.ui = new UIController();
-                this.blockchain = new BlockchainService();
-                this.campaignService = new CampaignService();
-            }
+        function showToast(title, msg, icon) {
+            const toast = document.getElementById('toast');
+            const titleEl = document.getElementById('toastTitle');
+            const msgEl = document.getElementById('toastMessage');
+            const iconEl = document.getElementById('toastIcon');
             
-            async init() {
-                try {
-                    // Initialize blockchain
-                    await this.blockchain.initialize();
-                    
-                    // Load campaigns
-                    await this.loadCampaigns();
-                    
-                    // Setup Google Login callback
-                    window.handleGoogleLogin = this.handleGoogleLogin.bind(this);
-                    
-                    console.log('App initialized successfully');
-                } catch (error) {
-                    console.error('Initialization error:', error);
-                    this.showToast('Initialization Error', error.message, '❌');
-                }
-            }
+            if (!toast || !titleEl || !msgEl || !iconEl) return;
             
-            async loadCampaigns() {
-                try {
-                    const campaigns = await this.campaignService.fetchCampaigns();
-                    state.set('campaigns', campaigns);
-                    this.ui.updateCampaignsUI();
-                } catch (error) {
-                    console.error('Failed to load campaigns:', error);
-                    this.showToast('Error', 'Failed to load campaigns', '❌');
-                }
-            }
+            titleEl.textContent = title;
+            msgEl.textContent = msg;
+            iconEl.textContent = icon;
             
-            // Public methods bound to UI
-            navigate(page) { this.ui.navigate(page); }
-            toggleLoginModal(show) { this.ui.toggleLoginModal(show); }
-            toggleMobileMenu() { this.ui.toggleMobileMenu(); }
-            showDetail(id) { this.ui.showDetail(id); }
-            openDonateModal() { this.ui.openDonateModal(); }
-            closeDonateModal() { this.ui.closeDonateModal(); }
-            filterCategory(cat) { this.ui.filterCategory(cat); }
-            showToast(title, msg, icon) { this.ui.showToast(title, msg, icon); }
-            formatAddress(addr) { return this.ui.formatAddress(addr); }
+            toast.classList.remove('hidden');
             
-            async connectWallet() {
-                try {
-                    const address = await this.blockchain.requestConnection();
-                    this.showToast('Connected', this.formatAddress(address), '✓');
-                    this.toggleLoginModal(false);
-                } catch (error) {
-                    console.error('Connection error:', error);
-                    this.showToast('Connection Failed', error.message, '❌');
-                }
-            }
-            
-            validateAmount(input) {
-                const value = parseFloat(input.value);
-                const errorEl = document.getElementById('amountError');
-                
-                if (isNaN(value) || value < CONFIG.MIN_DONATION || value > CONFIG.MAX_DONATION) {
-                    input.classList.add('border-red-500');
-                    errorEl?.classList.add('visible');
-                    return false;
-                } else {
-                    input.classList.remove('border-red-500');
-                    errorEl?.classList.remove('visible');
-                    this.updateBankrPreview();
-                    return true;
-                }
-            }
-            
-            setAmount(amt) {
-                const input = document.getElementById('donateAmount');
-                if (input) {
-                    input.value = amt;
-                    this.validateAmount(input);
-                }
-            }
-            
-            updateBankrPreview() {
-                const campaign = state.get('currentCampaign');
-                if (!campaign) return;
-                
-                const amount = document.getElementById('donateAmount')?.value || '0.1';
-                const message = document.getElementById('donateMessage')?.value || '';
-                
-                const preview = document.getElementById('bankrTweetPreview');
-                if (preview) {
-                    const tweet = this.generateBankrTweet(campaign, amount, message);
-                    preview.textContent = tweet;
-                }
-            }
-            
-            generateBankrTweet(campaign, amount, message) {
-                const cleanMessage = message ? message.replace(/[@#]/g, '').trim() : '';
-                const truncatedMessage = cleanMessage.length > 50 ? cleanMessage.slice(0, 50) + '...' : cleanMessage;
-                
-                return `Hey ${campaign.creatorX}, ${truncatedMessage || 'supporting your mission'}. Sending ${amount} ETH 💙 ${CONFIG.BANKR_BOT_HANDLE} ${CONFIG.HASHTAG} ${campaign.id}`;
-            }
-            
-            async copyBankrTweet() {
-                const campaign = state.get('currentCampaign');
-                if (!campaign) return;
-                
-                const amountInput = document.getElementById('donateAmount');
-                if (!this.validateAmount(amountInput)) {
-                    this.showToast('Error', 'Please enter a valid amount', '⚠️');
-                    return;
-                }
-                
-                const amount = amountInput.value;
-                const message = document.getElementById('donateMessage')?.value || '';
-                
-                const tweetText = this.generateBankrTweet(campaign, amount, message);
-                
-                try {
-                    await navigator.clipboard.writeText(tweetText);
-                    
-                    // Open X with intent
-                    const xUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-                    window.open(xUrl, '_blank', 'noopener,noreferrer');
-                    
-                    this.showToast('Copied!', 'Tweet copied, opening X...', '✓');
-                } catch (err) {
-                    this.showToast('Error', 'Failed to copy tweet', '❌');
-                }
-            }
-            
-            async processDirectDonation() {
-                const amountInput = document.getElementById('donateAmount');
-                
-                if (!this.validateAmount(amountInput)) {
-                    return;
-                }
-                
-                const amount = parseFloat(amountInput.value);
-                const campaign = state.get('currentCampaign');
-                
-                if (!campaign) {
-                    this.showToast('Error', 'No campaign selected', '⚠️');
-                    return;
-                }
-                
-                // Check wallet connection
-                if (!state.get('account')) {
-                    this.showToast('Connect Wallet', 'Please connect your wallet first', '⚠️');
-                    this.closeDonateModal();
-                    this.toggleLoginModal(true);
-                    return;
-                }
-                
-                const btn = document.getElementById('directDonateBtn');
-                btn.disabled = true;
-                btn.textContent = 'Processing...';
-                
-                try {
-                    this.showToast('Processing', 'Sending transaction...', '⏳');
-                    
-                    const txHash = await this.blockchain.donate(campaign.id, amount);
-                    
-                    this.showToast('Pending', 'Waiting for confirmation...', '⏳');
-                    
-                    const receipt = await this.blockchain.waitForReceipt(txHash);
-                    
-                    if (receipt.status === 'success') {
-                        this.showToast('Success!', `Donated ${amount} ETH`, '✓');
-                        this.closeDonateModal();
-                        await this.loadCampaigns(); // Refresh data
-                    } else {
-                        throw new Error('Transaction failed');
-                    }
-                } catch (err) {
-                    console.error('Donation error:', err);
-                    this.showToast('Error', err.message || 'Transaction failed', '❌');
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'Donate Direct';
-                }
-            }
-            
-            handleGoogleLogin(response) {
-                try {
-                    // Note: In production, verify JWT on backend
-                    const credential = response.credential;
-                    const payload = JSON.parse(atob(credential.split('.')[1]));
-                    
-                    state.set('user', {
-                        type: 'google',
-                        email: payload.email,
-                        name: payload.name,
-                        picture: payload.picture,
-                        sub: payload.sub
-                    });
-                    
-                    this.showToast('Welcome', `Logged in as ${payload.name}`, '✓');
-                    this.toggleLoginModal(false);
-                    
-                    // Note: Don't store sensitive data in localStorage in production
-                    // Use httpOnly cookies instead
-                } catch (error) {
-                    console.error('Google login error:', error);
-                    this.showToast('Error', 'Failed to process login', '❌');
-                }
-            }
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
         }
 
-        // ==================== INITIALIZATION ====================
-        const blockchain = new BlockchainService();
-        const campaignService = new CampaignService();
-        const app = new App();
-
-        // Start app when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => app.init());
-        } else {
-            app.init();
+        function formatAddress(addr) {
+            if (!addr) return '';
+            return addr.slice(0, 6) + '...' + addr.slice(-4);
         }
 
-        // Expose minimal global API for HTML onclick handlers
-        window.app = app;
+        // ==================== PULL TO REFRESH ====================
+        function setupPullToRefresh() {
+            let startY = 0;
+            let isPulling = false;
+            
+            document.addEventListener('touchstart', (e) => {
+                if (window.scrollY === 0) {
+                    startY = e.touches[0].pageY;
+                    isPulling = true;
+                }
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!isPulling) return;
+                
+                const y = e.touches[0].pageY;
+                const diff = y - startY;
+                
+                if (diff > 50 && window.scrollY === 0) {
+                    document.getElementById('pullRefresh')?.classList.add('visible');
+                }
+            }, { passive: true });
+            
+            document.addEventListener('touchend', () => {
+                if (!isPulling) return;
+                
+                const pullRefresh = document.getElementById('pullRefresh');
+                if (pullRefresh?.classList.contains('visible')) {
+                    pullRefresh.classList.remove('visible');
+                    loadCampaigns();
+                    showToast('Refreshing...', 'Updating campaigns', '↻');
+                }
+                
+                isPulling = false;
+            });
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('donateModal')?.addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeDonateModal();
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     </script>
 </body>
 </html>
